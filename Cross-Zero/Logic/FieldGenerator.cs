@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CrossZeroCommon;
+﻿using CrossZeroCommon;
 
-namespace Cross_Zero
+namespace Cross_Zero.Logic
 {
     public class FieldGenerator
     {
@@ -71,7 +66,7 @@ namespace Cross_Zero
                     rect = gameField[index][i];
                     if (i == 0)
                     {
-                        line = new LogicLine(UIController.Instance.GetNewVLine());
+                        line = new LogicLine(UIController.Instance.GetNewLine());
                         line.SetupUIVLine(new Vector2(index, i), gameField[index].Length);
                         line.RectRight = rect;
                         rect.LineLeft.Line = line;
@@ -80,7 +75,7 @@ namespace Cross_Zero
                         continue;
                     }
                     prevRect = gameField[index][i - 1];
-                    line = new LogicLine(UIController.Instance.GetNewVLine());
+                    line = new LogicLine(UIController.Instance.GetNewLine());
                     line.SetupUIVLine(new Vector2(index, i), gameField[index].Length);
                     line.RectLeft = prevRect;
                     line.RectRight = rect;
@@ -92,7 +87,7 @@ namespace Cross_Zero
 
                     if (i == gameField[index].Length - 1)
                     {
-                        line = new LogicLine(UIController.Instance.GetNewVLine());
+                        line = new LogicLine(UIController.Instance.GetNewLine());
                         line.SetupUIVLine(new Vector2(index, ++i), gameField[index].Length);
                         line.RectLeft = rect;
                         rect.LineRight.Line = line;
@@ -121,7 +116,7 @@ namespace Cross_Zero
                     rect = gameField[i][j];
                     if (i == min)
                     {
-                        line = new LogicLine(UIController.Instance.GetNewHLine());
+                        line = new LogicLine(UIController.Instance.GetNewLine());
                         line.SetupUIHLine(new Vector2(i, index));
                         line.RectRight = rect;
                         rect.LineTop.Line = line;
@@ -133,7 +128,7 @@ namespace Cross_Zero
                         if (!inFreeze && !back) prevRect = gameField[i - 1][j - 1];
                         else if (inFreeze && !back) prevRect = gameField[i - 1][j];
                         else prevRect = gameField[i - 1][j + 1];
-                        line = new LogicLine(UIController.Instance.GetNewHLine());
+                        line = new LogicLine(UIController.Instance.GetNewLine());
                         line.SetupUIHLine(new Vector2(i, index));
                         line.RectLeft = prevRect;
                         line.RectRight = rect;
@@ -146,7 +141,7 @@ namespace Cross_Zero
 
                     if (i == max)
                     {
-                        line = new LogicLine(UIController.Instance.GetNewHLine());
+                        line = new LogicLine(UIController.Instance.GetNewLine());
                         line.SetupUIHLine(new Vector2(i + 1, index));
                         line.RectLeft = rect;
                         rect.LineBottom.Line = line;
@@ -170,9 +165,42 @@ namespace Cross_Zero
             } while (index < gameField.Length);
         }
 
-        public void GeneratePoints(LogicRectangle gameField)
+        public void GeneratePoints(LogicRectangle[][] gameField)
         {
-            
+            int x, y;
+            for (int i = 0; i < gameField.Length; i++)
+            {
+                for (int j = 0; j < gameField[i].Length; j++)
+                {
+                    //Set top point
+                    if (gameField[i][j].LineLeft.Line.UIPointTop == null)
+                    {
+                        x = (int) (gameField[i][j].LineLeft.Line.UiLine.X1);
+                        y = (int) (gameField[i][j].LineLeft.Line.UiLine.Y1);
+                        gameField[i][j].LineLeft.Line.UIPointTop = UIController.Instance.GetNewPoint(new Vector2(x, y));
+                    }
+                    //Set bottom point
+                    x = (int) (gameField[i][j].LineLeft.Line.UiLine.X2);
+                    y = (int) (gameField[i][j].LineLeft.Line.UiLine.Y2);
+                    gameField[i][j].LineLeft.Line.UIPointBottom =
+                        UIController.Instance.GetNewPoint(new Vector2(x, y));
+
+                    if (j == gameField[i].Length - 1)
+                    {
+                        //Set top point
+                        if (gameField[i][j].LineRight.Line.UIPointTop == null)
+                        {
+                            x = (int)(gameField[i][j].LineRight.Line.UiLine.X1);
+                            y = (int)(gameField[i][j].LineRight.Line.UiLine.Y1);
+                            gameField[i][j].LineRight.Line.UIPointTop = UIController.Instance.GetNewPoint(new Vector2(x, y));
+                        }
+                        //Set bottom point
+                        x = (int)(gameField[i][j].LineRight.Line.UiLine.X2);
+                        y = (int)(gameField[i][j].LineRight.Line.UiLine.Y2);
+                        gameField[i][j].LineRight.Line.UIPointBottom = UIController.Instance.GetNewPoint(new Vector2(x, y));
+                    }
+                }
+            }
         }
     }
 }

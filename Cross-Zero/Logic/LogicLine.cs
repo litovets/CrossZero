@@ -3,7 +3,7 @@ using System.Windows.Input;
 using System.Windows.Shapes;
 using CrossZeroCommon;
 
-namespace Cross_Zero
+namespace Cross_Zero.Logic
 {
     public class LineEventArgs : EventArgs
     {
@@ -14,6 +14,9 @@ namespace Cross_Zero
     {
         public LogicRectangle RectLeft { get; set; }
         public LogicRectangle RectRight { get; set; }
+        public Ellipse UIPointTop { get; set; }
+        public Ellipse UIPointBottom { get; set; }
+        public Line UiLine { get { return _uiLine; }}
 
         private readonly Line _uiLine;
         private Vector2 _pos;

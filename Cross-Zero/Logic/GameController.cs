@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System;
 
-namespace Cross_Zero
+namespace Cross_Zero.Logic
 {
     public class GameController
     {
@@ -12,7 +9,12 @@ namespace Cross_Zero
         public const int maxFieldSize = 21;
 
         public int FieldSize { get; set; }
-        public int CellWidth { get; set; }
+
+        public Player ServerPlayer { get; private set; }
+        public Player RemotePlayer { get; private set; }
+        public Player ActivePlayer { get; private set; }
+
+        public event Action EndCreateGame;
 
         public static GameController Instance
         {
@@ -26,19 +28,27 @@ namespace Cross_Zero
                 return _instance;
             }
         }
-        private GameController(){}
+        protected GameController(){}
 
         private static GameController _instance;
 
-        private LogicRectangle[][] _gameField;
+        protected LogicRectangle[][] _gameField;
 
-        public void StartGame(int fieldSize)
+        public virtual void StartGame(int fieldSize)
+        {
+            CreateGame(fieldSize);
+
+            if (EndCreateGame != null)
+                EndCreateGame();
+        }
+
+        public void CreateGame(int fieldSize)
         {
             FieldSize = fieldSize;
             _gameField = new LogicRectangle[FieldSize][];
-            UIController.Instance.CellWidth = CellWidth;
             FieldGenerator.Instance.GenerateField(_gameField);
             FieldGenerator.Instance.GenerateStates(_gameField);
+            FieldGenerator.Instance.GeneratePoints(_gameField);
         }
     }
 }

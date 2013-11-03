@@ -1,6 +1,6 @@
 ﻿using CrossZeroCommon;
 
-namespace Cross_Zero
+namespace Cross_Zero.Logic
 {
     public class LogicRectangle
     {

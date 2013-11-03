@@ -1,17 +1,19 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using CrossZeroCommon;
+using Cross_Zero.Logic;
 
 namespace Cross_Zero
 {
     public class UIController
     {
         public const int LineThickness = 4;
-        public SolidColorBrush LineEnterColor = Brushes.Magenta;
+        public const int PointRadius = LineThickness + 1;
+        public const int CellWidth = 24;
+        public SolidColorBrush LineEnterColor = Brushes.Black;
         public SolidColorBrush LineLeaveColor = Brushes.LightSkyBlue;
         public SolidColorBrush LineEnabledColor = Brushes.Black;
 
@@ -27,32 +29,14 @@ namespace Cross_Zero
                 return _instance;
             }
         }
-
-        public int CellWidth { get; set; }
-
+        
         private UIController(){}
 
         private static UIController _instance;
+        
         public Canvas Canvas { get; set; }
 
-        public Line GetNewHLine()
-        {
-            Line line = new Line();
-            line.StrokeThickness = LineThickness;
-            line.Stroke = LineLeaveColor;
-            line.HorizontalAlignment = HorizontalAlignment.Center;
-            line.VerticalAlignment = VerticalAlignment.Center;
-            line.X1 = 0;
-            line.Y1 = 0;
-            line.X2 = CellWidth;
-            line.Y2 = 0;
-            line.MouseEnter += LineOnMouseEnter;
-            line.MouseLeave += LineOnMouseLeave;
-            Canvas.Children.Add(line);
-            return line;
-        }
-
-        public Line GetNewVLine()
+        public Line GetNewLine()
         {
             Line line = new Line();
             line.StrokeThickness = LineThickness;
@@ -62,8 +46,6 @@ namespace Cross_Zero
             line.MouseEnter += LineOnMouseEnter;
             line.MouseLeave += LineOnMouseLeave;
             Canvas.Children.Add(line);
-            //Canvas.Visibility = Visibility.Hidden;
-            //line.Visibility = Visibility.Hidden;
             return line;
         }
 
@@ -93,6 +75,16 @@ namespace Cross_Zero
             line.Y1 = centerPos.Y + y - halfCellWidth;
             line.X2 = centerPos.X + x;
             line.Y2 = centerPos.Y + y + halfCellWidth;
+        }
+
+        public Ellipse GetNewPoint(Vector2 pos)
+        {
+            Ellipse point = new Ellipse {Width = PointRadius, Height = PointRadius};
+            point.Fill = LineEnabledColor;
+            Canvas.SetLeft(point, pos.X - PointRadius*0.5f);
+            Canvas.SetTop(point, pos.Y - PointRadius*0.5f);
+            Canvas.Children.Add(point);
+            return point;
         }
 
         #region Event Handlers

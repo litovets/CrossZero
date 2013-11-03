@@ -53,10 +53,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FieldGenerator.cs" />
-    <Compile Include="GameController.cs" />
-    <Compile Include="LogicLine.cs" />
-    <Compile Include="LogicRectangle.cs" />
+    <Compile Include="Logic\FieldGenerator.cs" />
+    <Compile Include="Logic\GameController.cs" />
+    <Compile Include="Logic\LogicLine.cs" />
+    <Compile Include="Logic\LogicRectangle.cs" />
+    <Compile Include="Logic\MultiplayerGameController.cs" />
+    <Compile Include="Logic\Player.cs" />
+    <Compile Include="Network\AsyncSocketClient.cs" />
+    <Compile Include="Network\AsyncSocketServer.cs" />
+    <Compile Include="Network\NetworkManager.cs" />
     <Compile Include="UIController.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -104,6 +109,7 @@
       <Name>CrossZeroCommon</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
