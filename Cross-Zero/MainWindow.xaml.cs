@@ -38,6 +38,7 @@ namespace Cross_Zero
             GameController.Instance.EndCreateGame += OnEndCreateGame;
 
             UIController.Instance.Canvas = gameCanvas;
+            UIController.Instance.ActivePlayerLabel = ActivePlayerLabel;
             ComboBoxItem cbi = (ComboBoxItem) sizeComboBox.ItemContainerGenerator.ContainerFromIndex(sizeComboBox.SelectedIndex);
             if (cbi == null) return;
             GameController.Instance.StartGame(int.Parse((string)cbi.Content));

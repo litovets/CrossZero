@@ -1,10 +1,13 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using CrossZeroCommon;
 using Cross_Zero.Logic;
+using Cross_Zero.Network;
 
 namespace Cross_Zero
 {
@@ -29,12 +32,33 @@ namespace Cross_Zero
                 return _instance;
             }
         }
-        
-        private UIController(){}
+
+        private UIController()
+        {
+            signs = new List<Label>();
+
+            if (NetworkManager.Instance.IsMultiplayerGame)
+                MultiplayerGameController.Instance.NextPlayerEvent += OnNextPlayerEventNetwork;
+            else
+                GameController.Instance.NextPlayerEvent += OnNextPlayerEventLocal;
+        }
+
+        private List<Label> signs;
+
+        private void OnNextPlayerEventNetwork()
+        {
+            ActivePlayerLabel.Content = MultiplayerGameController.Instance.players[GameController.Instance.ActivePlayerId].Name;
+        }
+
+        private void OnNextPlayerEventLocal()
+        {
+            ActivePlayerLabel.Content = GameController.Instance.players[GameController.Instance.ActivePlayerId].Name;
+        }
 
         private static UIController _instance;
         
         public Canvas Canvas { get; set; }
+        public Label ActivePlayerLabel { get; set; }
 
         public Line GetNewLine()
         {
@@ -51,7 +75,12 @@ namespace Cross_Zero
 
         public void SetupHLine(Line line, Vector2 pos)
         {
-            int fieldSize = GameController.Instance.FieldSize;
+            int fieldSize;
+            if (NetworkManager.Instance.IsMultiplayerGame)
+                fieldSize = MultiplayerGameController.Instance.FieldSize;
+            else
+                fieldSize = GameController.Instance.FieldSize;
+
             int halfCellWidth = (int) (CellWidth*0.5f);
             int centerIndex = (int) ((fieldSize - 1)*0.5f);
             Vector2 centerPos = new Vector2((int) (Canvas.Width*0.5d), (int)(Canvas.Height*0.5d));
@@ -65,7 +94,12 @@ namespace Cross_Zero
 
         public void SetupVLine(Line line, Vector2 pos, int rowLength)
         {
-            int fieldSize = GameController.Instance.FieldSize;
+            int fieldSize;
+            if (NetworkManager.Instance.IsMultiplayerGame)
+                fieldSize = MultiplayerGameController.Instance.FieldSize;
+            else
+                fieldSize = GameController.Instance.FieldSize;
+
             int halfCellWidth = (int)(CellWidth * 0.5f);
             int centerIndex = (int)((fieldSize - 1) * 0.5f);
             Vector2 centerPos = new Vector2((int)(Canvas.Width * 0.5d), (int)(Canvas.Height * 0.5d));
@@ -85,6 +119,21 @@ namespace Cross_Zero
             Canvas.SetTop(point, pos.Y - PointRadius*0.5f);
             Canvas.Children.Add(point);
             return point;
+        }
+
+        public void ActivateSigh(string sign, LogicRectangle rect)
+        {
+            Label label = new Label();
+            label.Content = sign;
+            label.FontSize = 20;
+            label.FontWeight = FontWeights.Bold;
+            label.Padding = new Thickness(0,0,0,0);
+
+            double x = rect.LineLeft.Line.UiLine.X1+4;
+            double y = rect.LineLeft.Line.UiLine.Y1-3;
+            Canvas.SetLeft(label, x);
+            Canvas.SetTop(label, y);
+            Canvas.Children.Add(label);
         }
 
         #region Event Handlers

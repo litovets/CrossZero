@@ -3,13 +3,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace Cross_Zero.Network
 {
-    public class AsyncSocketClient
+    public class AsyncSocketClient : INetworkGame
     {
         // The port number for the remote device.
         private const int port = 11000;
@@ -25,7 +24,7 @@ namespace Cross_Zero.Network
         // The response from the remote device.
         private static String response = String.Empty;
 
-        private static void StartClient()
+        public static void StartClient()
         {
             // Connect to a remote device.
             try
@@ -172,6 +171,14 @@ namespace Cross_Zero.Network
             {
                 Console.WriteLine(e.ToString());
             }
+        }
+
+        public void StartGame(int fieldSize)
+        {
+        }
+
+        public void EnableLine(bool flag, CrossZeroCommon.Vector2 pos, Logic.LogicLine.Positioning positioning)
+        {
         }
     }
 }

@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
+using CrossZeroCommon;
+using Cross_Zero.Logic;
 
 namespace Cross_Zero.Network
 {
@@ -23,7 +25,7 @@ namespace Cross_Zero.Network
         public StringBuilder sb = new StringBuilder();
     }
 
-    public class AsyncSocketServer
+    public class AsyncSocketServer : INetworkGame
     {
         //Thread signal
         public static ManualResetEvent allDone = new ManualResetEvent(false);
@@ -147,6 +149,15 @@ namespace Cross_Zero.Network
                 MessageBox.Show(ex.Message);
             }
         }
+
+        public void StartGame(int fieldSize)
+        {
+        }
+
+        public void EnableLine(bool flag, Vector2 pos, LogicLine.Positioning positioning)
+        {
+        }
+
     }
 
 }

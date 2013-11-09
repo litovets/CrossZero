@@ -61,6 +61,7 @@
         </Canvas>
 
         <Canvas x:Name="gameCanvas" Height="512" Width="512" Visibility="Hidden">
+            <Label Name="ActivePlayerLabel"/>
 
         </Canvas>
     </Canvas>

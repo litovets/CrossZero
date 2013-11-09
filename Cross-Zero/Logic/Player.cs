@@ -14,5 +14,15 @@ namespace Cross_Zero.Logic
 
         //Logic
         public int Id { get; set; }
+        public string Sign { get; set; }
+        public string Name { get; set; }
+        public int ActivatedRects { get; set; }
+
+        public Player(int id, string name, string sign)
+        {
+            Id = id;
+            Name = name;
+            Sign = sign;
+        }
     }
 }

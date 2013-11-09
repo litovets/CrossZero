@@ -1,5 +1,7 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace Cross_Zero.Logic
 {
@@ -10,10 +12,13 @@ namespace Cross_Zero.Logic
 
         public int FieldSize { get; set; }
 
-        public Player ServerPlayer { get; private set; }
-        public Player RemotePlayer { get; private set; }
-        public Player ActivePlayer { get; private set; }
+        public Player[] players { get; private set; }
+        public int ActivePlayerId { get; private set; }
 
+        public List<LogicLine> LogicLines { get; set; }
+        public int RectsCount { get; private set; }
+
+        public event Action NextPlayerEvent;
         public event Action EndCreateGame;
 
         public static GameController Instance
@@ -28,9 +33,11 @@ namespace Cross_Zero.Logic
                 return _instance;
             }
         }
-        protected GameController(){}
+        protected GameController(){ LogicLines = new List<LogicLine>(); }
 
         private static GameController _instance;
+
+        private bool turnAgain;
 
         protected LogicRectangle[][] _gameField;
 
@@ -38,8 +45,43 @@ namespace Cross_Zero.Logic
         {
             CreateGame(fieldSize);
 
+            foreach (LogicLine logicLine in LogicLines)
+            {
+                logicLine.LineEnabled += LogicLineOnEnabled;
+            }
+
+            for (int i = 0; i < _gameField.Length; i++)
+            {
+                RectsCount += _gameField[i].Length;
+                for (int j = 0; j < _gameField[i].Length; j++)
+                {
+                    _gameField[i][j].RectCompleted += OnRectCompleted;
+                }
+            }
+
+            players = new[] {new Player(0, "Player1", "X"), new Player(1, "Player2", "O")};
+            ActivePlayerId = 0;
+
+            UIController.Instance.ActivePlayerLabel.Content = players[ActivePlayerId].Name;
+            
             if (EndCreateGame != null)
                 EndCreateGame();
+        }
+
+        private void OnRectCompleted(LogicRectangle logicRectangle)
+        {
+            players[ActivePlayerId].ActivatedRects++;
+            UIController.Instance.ActivateSigh(players[ActivePlayerId].Sign, logicRectangle);
+            if ((players[0].ActivatedRects + players[1].ActivatedRects) == RectsCount)
+                MessageBox.Show("GameOver");
+            turnAgain = true;
+        }
+
+        private void LogicLineOnEnabled(object sender, LineEventArgs e)
+        {
+            NextPlayer();
+            if (NextPlayerEvent != null)
+                NextPlayerEvent();
         }
 
         public void CreateGame(int fieldSize)
@@ -49,6 +91,20 @@ namespace Cross_Zero.Logic
             FieldGenerator.Instance.GenerateField(_gameField);
             FieldGenerator.Instance.GenerateStates(_gameField);
             FieldGenerator.Instance.GeneratePoints(_gameField);
+        }
+
+        public void NextPlayer()
+        {
+            if (turnAgain)
+            {
+                turnAgain = false;
+                return;
+            }
+
+            if (ActivePlayerId == 1)
+                ActivePlayerId = 0;
+            else
+                ActivePlayerId++;
         }
     }
 }

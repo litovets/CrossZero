@@ -1,10 +1,14 @@
-﻿using CrossZeroCommon;
+﻿using System;
+using CrossZeroCommon;
 
 namespace Cross_Zero.Logic
 {
     public class LogicRectangle
     {
+
         public Vector2 Pos { get; set; }
+
+        public event Action<LogicRectangle> RectCompleted;
 
         public class LineState
         {
@@ -54,7 +58,13 @@ namespace Cross_Zero.Logic
             if (LineRight.Line == line)
                 LineRight.Enabled = flag;
 
-            //if (IsComplete) Debug.Log("COMPLETE, POS = " + Pos);
+            if (IsComplete)
+            {
+                if (RectCompleted != null)
+                {
+                    RectCompleted(this);
+                }
+            }
         }
     }
 }
