@@ -73,7 +73,23 @@ namespace Cross_Zero.Logic
             players[ActivePlayerId].ActivatedRects++;
             UIController.Instance.ActivateSigh(players[ActivePlayerId].Sign, logicRectangle);
             if ((players[0].ActivatedRects + players[1].ActivatedRects) == RectsCount)
-                MessageBox.Show("GameOver");
+            {
+                if (players[0].ActivatedRects > players[1].ActivatedRects)
+                {
+                    MessageBox.Show(string.Format("{0} won with {1} rects.", players[0].Name, players[0].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                if (players[0].ActivatedRects < players[1].ActivatedRects)
+                {
+                    MessageBox.Show(string.Format("{0} won with {1} rects.", players[1].Name, players[1].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+                if (players[0].ActivatedRects == players[1].ActivatedRects)
+                {
+                    MessageBox.Show("Draw in this game", "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+            }
             turnAgain = true;
         }
 
