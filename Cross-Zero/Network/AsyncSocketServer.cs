@@ -28,20 +28,40 @@ namespace Cross_Zero.Network
     public class AsyncSocketServer : INetworkGame
     {
         //Thread signal
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
+        public ManualResetEvent allDone = new ManualResetEvent(false);
 
-        public AsyncSocketServer() {}
+        private IPAddress serverAddress;
+        private int port;
 
-        public static void StartListening()
+        public AsyncSocketServer(string ipAddress, string port)
+        {
+            try
+            {
+                serverAddress = IPAddress.Parse(ipAddress);
+                this.port = int.Parse(port);
+            }
+            catch (Exception)
+            {
+                serverAddress = IPAddress.Parse("127.0.0.1");
+                this.port = 11000;
+                MessageBox.Show(string.Format("IP Address is not correct!\n" +
+                                "Server created with default parameters:\n" +
+                                "IPAddress: {0}\n" +
+                                "port: {1}", "127.0.0.1", 11000));
+            }
+            
+        }
+
+        public void StartListening()
         {
             //Data buffer for incoming data
             byte[] bytes = new byte[1024];
 
             // Establish the local endpoint for the socket.
             // The DNS name of the computer
-            IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
-            IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+            //IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+            //IPAddress ipAddress = ipHostInfo.AddressList[0];
+            IPEndPoint localEndPoint = new IPEndPoint(serverAddress, port);
 
             //Create a TCP/IP socket
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -52,16 +72,19 @@ namespace Cross_Zero.Network
                 listener.Bind(localEndPoint);
                 listener.Listen(100);
 
+                if (ServerCreateComplete != null)
+                    ServerCreateComplete("Server", serverAddress.ToString(), port.ToString());
+
                 while (true)
                 {
                     // Set the event to nonsignaled state.
-                    allDone.Reset();
+                    //allDone.Reset();
 
                     // Start an asynchronous socket to listen for connections.
                     listener.BeginAccept(AcceptCallback, listener);
 
                     // Wait until a connection is made before continuing.
-                    allDone.WaitOne();
+                    //allDone.WaitOne();
                 }
             }
             catch (Exception e)
@@ -70,10 +93,10 @@ namespace Cross_Zero.Network
             }
         }
 
-        private static void AcceptCallback(IAsyncResult ar)
+        private void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.
-            allDone.Set();
+            //allDone.Set();
 
             // Get the socket that handles the client request.
             Socket listener = (Socket) ar.AsyncState;
@@ -85,7 +108,7 @@ namespace Cross_Zero.Network
             handler.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReadCallback, state);
         }
 
-        private static void ReadCallback(IAsyncResult ar)
+        private void ReadCallback(IAsyncResult ar)
         {
             string content = String.Empty;
 
@@ -122,7 +145,7 @@ namespace Cross_Zero.Network
             }
         }
 
-        private static void Send(Socket handler, string data)
+        private void Send(Socket handler, string data)
         {
             // Convert the string data to byte data using ASCII encoding.
             byte[] byteData = Encoding.UTF8.GetBytes(data);
@@ -131,7 +154,7 @@ namespace Cross_Zero.Network
             handler.BeginSend(byteData, 0, byteData.Length, 0, SendCallback, handler);
         }
 
-        private static void SendCallback(IAsyncResult ar)
+        private void SendCallback(IAsyncResult ar)
         {
             try
             {
@@ -150,14 +173,27 @@ namespace Cross_Zero.Network
             }
         }
 
-        public void StartGame(int fieldSize)
+        #region INetworkGame
+
+        public void StartNetwork()
+        {
+            StartListening();
+        }
+
+        public void SendStartGame(int fieldSize)
         {
         }
 
-        public void EnableLine(bool flag, Vector2 pos, LogicLine.Positioning positioning)
+        public void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning)
         {
         }
 
+        public event Action<string, string, string> ServerCreateComplete;
+        public event Action<string, string, string> ConnectToServerComplete;
+
+        public event Action<int> OnStartGame;
+        public event Action<Vector2, LogicLine.Positioning> OnLineEnable;
+
+        #endregion
     }
-
 }

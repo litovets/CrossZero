@@ -39,9 +39,39 @@
         </StackPanel>
     </Window.Resources>
     <Canvas Height="512" Width="512">
-        <Canvas x:Name="menuCanvas" Height="512" Width="512">
-            <Button Name="StartGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="200" FontSize="20" FontWeight="Bold" Click="StartGameButton_Click">START GAME</Button>
-            <Button Name="ExitButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Click="ExitButton_Click">EXIT</Button>
+        <Canvas x:Name="menuCanvas" Height="512" Width="512" Visibility="Hidden">
+            <Button Name="StartMulGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="170" FontSize="20" FontWeight="Bold" Click="StartMulGameButton_Click">MULTIPLAYER</Button>
+            <Button Name="SingleGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="230" FontSize="20" FontWeight="Bold" Click="SingleGameButton_Click">SINGLE</Button>
+            <Button Name="ExitButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="290" FontSize="20" FontWeight="Bold" Click="ExitButton_Click">EXIT</Button>
+        </Canvas>
+
+        <Canvas x:Name="SelectMulGameCanvas" Height="512" Width="512" Visibility="Hidden">
+            <Button Name="NetworkButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="200" FontSize="20" FontWeight="Bold" Click="NetworkButton_Click">NETWORK</Button>
+            <Button Name="OnThisCompButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold"  Click="StartGameButton_Click">LOCAL</Button>
+            <Button Name="BackButtonSelMulGame" Width="100" Height="50" Canvas.Left="10" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="BackButtonSelMulGame_Click">BACK</Button>
+        </Canvas>
+
+        <Canvas x:Name="NetworkMenuCanvas" Height="512" Width="512" Visibility="Hidden">
+            <Button Name="CreateMulGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="200" FontSize="20" FontWeight="Bold" Click="CreateMulGameButton_Click">CREATE</Button>
+            <Button Name="ConnectButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Click="ConnectButton_Click">CONNECT</Button>
+            <Button Name="BackButtonNetMenu" Width="100" Height="50" Canvas.Left="10" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="BackButtonNetMenu_Click">BACK</Button>
+        </Canvas>
+
+        <Canvas x:Name="CreateMulGameCanvas" Height="512" Width="512">
+            <TextBox Name="IpAddressTextBox" Height="23" Canvas.Left="128" TextWrapping="Wrap" Canvas.Top="165" Width="182" BorderBrush="Black"/>
+            <TextBox Name="PortTextBox" Height="23" Canvas.Left="315" TextWrapping="Wrap" Canvas.Top="165" Width="64" BorderBrush="Black"/>
+            <Label Content="IP Address :" Canvas.Left="128" Canvas.Top="139"/>
+            <Label Content="port :" Canvas.Left="310" Canvas.Top="139"/>
+            <TextBox Name="PlayerNameTextBox" Height="23" Canvas.Left="128" TextWrapping="Wrap" Canvas.Top="102" Width="182" BorderBrush="Black"/>
+            <Label Content="Player Name :" Canvas.Left="128" Canvas.Top="76"/>
+            <Button Name="CreateServerButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Click="CreateServerButton_Click">CREATE</Button>
+            <Label Content="Create network game" Canvas.Left="128" Canvas.Top="10" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
+            <Button Name="BackButtonCreateMulGame" Width="100" Height="50" Canvas.Left="10" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="BackButtonCreateMulGame_Click">BACK</Button>
+            <Button x:Name="ConnectToServerButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="CONNECT"/>
+        </Canvas>
+
+        <Canvas x:Name="ConnectedListCanvas" Height="512" Width="512" Visibility="Hidden">
+            <ListBox Name="ConnectedListBox" Height="100" Canvas.Left="120" Canvas.Top="79" Width="275"/>
         </Canvas>
 
         <Canvas Name="optionsCanvas" Height="512" Width="512" Visibility="Hidden">
@@ -62,7 +92,7 @@
 
         <Canvas x:Name="gameCanvas" Height="512" Width="512" Visibility="Hidden">
             <Label Name="ActivePlayerLabel"/>
-
+            <Label Name="LinePosLabel" Canvas.Left="15" Canvas.Top="400"/>
         </Canvas>
     </Canvas>
 </Window>

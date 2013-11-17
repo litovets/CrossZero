@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CrossZeroCommon;
 using Cross_Zero.Network;
 
 namespace Cross_Zero.Logic
@@ -22,12 +23,14 @@ namespace Cross_Zero.Logic
             }
         }
 
-        private MultiplayerGameController(){}
+        protected MultiplayerGameController(){}
 
         private static MultiplayerGameController _instance;
 
         public override void StartGame(int fieldSize)
         {
+            NetworkManager.Instance.IsMultiplayerGame = true;
+
             CreateGame(fieldSize);
 
             foreach (LogicLine logicLine in LogicLines)
@@ -46,13 +49,18 @@ namespace Cross_Zero.Logic
 
         }
 
-        private void OnRectCompleted(LogicRectangle obj)
-        {
-        }
-
         private void LogicLineOnEnabled(object sender, LineEventArgs args)
         {
-            NetworkManager.Instance.NetworkGame.EnableLine(args.flag, args.pos, args.positioning);
+            NetworkManager.Instance.NetworkGame.SendEnableLine(args.pos, args.positioning);
+        }
+
+        public void EnableLine(Vector2 pos, LogicLine.Positioning positioning)
+        {
+            int x = pos.X == 0 ? pos.X : pos.X - 1;
+            int y = pos.Y == 0 ? pos.Y : pos.Y - 1;
+            LogicRectangle rect = _gameField[x][y];
+            LogicLine line = rect.GetLine(pos, positioning);
+            line.EnableLine(true);
         }
     }
 }

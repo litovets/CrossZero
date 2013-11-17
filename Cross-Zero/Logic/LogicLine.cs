@@ -26,6 +26,7 @@ namespace Cross_Zero.Logic
         public Ellipse UIPointTop { get; set; }
         public Ellipse UIPointBottom { get; set; }
         public Line UiLine { get { return _uiLine; }}
+        public Vector2 Pos {get { return _pos; }}
 
         private readonly Line _uiLine;
         private Vector2 _pos;
@@ -45,6 +46,12 @@ namespace Cross_Zero.Logic
 
         private void UiLineOnMouseLeftButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            //Send event
+            LineEventArgs lineEventArgs = new LineEventArgs { pos = _pos, positioning = _positioning };
+            LineEnabled(this, lineEventArgs);
+
+            UIController.Instance.LinePos.Content = _pos;
+
             EnableLine(true);
         }
 
@@ -58,16 +65,11 @@ namespace Cross_Zero.Logic
             {
                 RectRight.EnableLine(this, flag);
             }
+
             if (flag)
             {
                 UIController.Instance.EnableLine(_uiLine);
                 _uiLine.MouseLeftButtonUp -= UiLineOnMouseLeftButtonUp;
-            }
-
-            if (LineEnabled != null)
-            {
-                LineEventArgs lineEventArgs = new LineEventArgs {flag = flag, pos = _pos, positioning = _positioning};
-                LineEnabled(this, lineEventArgs);
             }
         }
 
@@ -77,10 +79,7 @@ namespace Cross_Zero.Logic
             _positioning = Positioning.Vertical;
             UIController.Instance.SetupVLine(_uiLine, pos, rowLength);
 
-            if (NetworkManager.Instance.IsMultiplayerGame)
-                MultiplayerGameController.Instance.LogicLines.Add(this);
-            else
-                GameController.Instance.LogicLines.Add(this);
+            GameController.Instance.LogicLines.Add(this);
         }
 
         public void SetupUIHLine(Vector2 pos)
@@ -89,10 +88,7 @@ namespace Cross_Zero.Logic
             _positioning = Positioning.Horizontal;
             UIController.Instance.SetupHLine(_uiLine, pos);
 
-            if (NetworkManager.Instance.IsMultiplayerGame)
-                MultiplayerGameController.Instance.LogicLines.Add(this);
-            else
-                GameController.Instance.LogicLines.Add(this);
+            GameController.Instance.LogicLines.Add(this);
         }
 
         ~LogicLine()

@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cross-Zero", "Cross-Zero\Cr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrossZeroCommon", "CrossZeroCommon\CrossZeroCommon.csproj", "{A1289F6D-3C11-40E7-9F60-A84EDC0D2C0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing", "Testing\Testing.csproj", "{FBCAA77C-D779-4E07-9B7A-8D974512998A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{A1289F6D-3C11-40E7-9F60-A84EDC0D2C0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1289F6D-3C11-40E7-9F60-A84EDC0D2C0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1289F6D-3C11-40E7-9F60-A84EDC0D2C0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBCAA77C-D779-4E07-9B7A-8D974512998A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBCAA77C-D779-4E07-9B7A-8D974512998A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBCAA77C-D779-4E07-9B7A-8D974512998A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBCAA77C-D779-4E07-9B7A-8D974512998A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

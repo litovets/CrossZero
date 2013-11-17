@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows;
+using Cross_Zero.Network;
 
 namespace Cross_Zero.Logic
 {
@@ -25,6 +26,16 @@ namespace Cross_Zero.Logic
         {
             get
             {
+                if (NetworkManager.Instance.IsMultiplayerGame)
+                {
+                    if (_instance == null)
+                    {
+                        _instance = MultiplayerGameController.Instance;
+                        return _instance;
+                    }
+                    return _instance;
+                }
+
                 if (_instance == null)
                 {
                     _instance = new GameController();
@@ -68,7 +79,7 @@ namespace Cross_Zero.Logic
                 EndCreateGame();
         }
 
-        private void OnRectCompleted(LogicRectangle logicRectangle)
+        protected void OnRectCompleted(LogicRectangle logicRectangle)
         {
             players[ActivePlayerId].ActivatedRects++;
             UIController.Instance.ActivateSigh(players[ActivePlayerId].Sign, logicRectangle);

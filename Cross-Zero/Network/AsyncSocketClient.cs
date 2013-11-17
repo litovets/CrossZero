@@ -1,17 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using CrossZeroCommon;
+using Cross_Zero.Logic;
 
 namespace Cross_Zero.Network
 {
     public class AsyncSocketClient : INetworkGame
     {
         // The port number for the remote device.
-        private const int port = 11000;
+        private int port = 11000;
+        private IPAddress serverAddress;
 
         // ManualResetEvent instances signal completion.
         private static ManualResetEvent connectDone =
@@ -24,7 +31,28 @@ namespace Cross_Zero.Network
         // The response from the remote device.
         private static String response = String.Empty;
 
-        public static void StartClient()
+        private Socket client;
+        private NetworkStream netStream;
+
+        public AsyncSocketClient(string ipAddress, string port)
+        {
+            try
+            {
+                serverAddress = IPAddress.Parse(ipAddress);
+                this.port = int.Parse(port);
+            }
+            catch (Exception)
+            {
+                serverAddress = IPAddress.Parse("127.0.0.1");
+                this.port = 11000;
+                MessageBox.Show(string.Format("IP Address is not correct!\n" +
+                                "Try to connect with default parameters:\n" +
+                                "IPAddress: {0}\n" +
+                                "port: {1}", "127.0.0.1", 11000));
+            }
+        }
+
+        private void StartClient()
         {
             // Connect to a remote device.
             try
@@ -32,33 +60,34 @@ namespace Cross_Zero.Network
                 // Establish the remote endpoint for the socket.
                 // The name of the 
                 // remote device is "host.contoso.com".
-                IPHostEntry ipHostInfo = Dns.Resolve("host.contoso.com");
-                IPAddress ipAddress = ipHostInfo.AddressList[0];
+                IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 // Create a TCP/IP socket.
-                Socket client = new Socket(AddressFamily.InterNetwork,
+                client = new Socket(AddressFamily.InterNetwork,
                     SocketType.Stream, ProtocolType.Tcp);
 
+                //Create network stream
+                netStream = new NetworkStream(client);
+
                 // Connect to the remote endpoint.
-                client.BeginConnect(remoteEP,
-                    new AsyncCallback(ConnectCallback), client);
+                client.BeginConnect(remoteEP, ConnectCallback, client);
                 connectDone.WaitOne();
 
                 // Send test data to the remote device.
-                Send(client, "This is a test<EOF>");
-                sendDone.WaitOne();
+                //Send(server, "This is a test<EOF>");
+                //sendDone.WaitOne();
 
                 // Receive the response from the remote device.
-                Receive(client);
-                receiveDone.WaitOne();
+                //Receive(server);
+                //receiveDone.WaitOne();
 
                 // Write the response to the console.
-                Console.WriteLine("Response received : {0}", response);
+                //Console.WriteLine("Response received : {0}", response);
 
                 // Release the socket.
-                client.Shutdown(SocketShutdown.Both);
-                client.Close();
+                //server.Shutdown(SocketShutdown.Both);
+                //server.Close();
 
             }
             catch (Exception e)
@@ -67,12 +96,12 @@ namespace Cross_Zero.Network
             }
         }
 
-        private static void ConnectCallback(IAsyncResult ar)
+        private void ConnectCallback(IAsyncResult ar)
         {
             try
             {
                 // Retrieve the socket from the state object.
-                Socket client = (Socket)ar.AsyncState;
+                //Socket server = (Socket)ar.AsyncState;
 
                 // Complete the connection.
                 client.EndConnect(ar);
@@ -82,6 +111,15 @@ namespace Cross_Zero.Network
 
                 // Signal that the connection has been made.
                 connectDone.Set();
+
+                // Receive the response from the remote device.
+                Receive(client);
+                receiveDone.WaitOne();
+                
+                // Send test data to the remote device.
+                Send(client, "This is a test<EOF>");
+                sendDone.WaitOne();
+
             }
             catch (Exception e)
             {
@@ -89,16 +127,17 @@ namespace Cross_Zero.Network
             }
         }
 
-        private static void Receive(Socket client)
+        private void Receive(Socket server)
         {
             try
             {
                 // Create the state object.
                 StateObject state = new StateObject();
-                state.workSocket = client;
+                state.workSocket = server;
 
                 // Begin receiving the data from the remote device.
-                client.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReceiveCallback, state);
+                netStream.BeginRead(state.buffer, 0, state.buffer.Length, ReceiveCallback, state);
+                //server.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReceiveCallback, state);
             }
             catch (Exception e)
             {
@@ -106,22 +145,23 @@ namespace Cross_Zero.Network
             }
         }
 
-        private static void ReceiveCallback(IAsyncResult ar)
+        private void ReceiveCallback(IAsyncResult ar)
         {
             try
             {
                 // Retrieve the state object and the client socket 
                 // from the asynchronous state object.
                 StateObject state = (StateObject)ar.AsyncState;
-                Socket client = state.workSocket;
+                client = state.workSocket;
 
                 // Read data from the remote device.
-                int bytesRead = client.EndReceive(ar);
+                //int bytesRead = client.EndReceive(ar);
+                int bytesRead = netStream.EndRead(ar);
 
                 if (bytesRead > 0)
                 {
                     // There might be more data, so store the data received so far.
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                    state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
 
                     // Get the rest of the data.
                     client.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReceiveCallback, state);
@@ -136,6 +176,8 @@ namespace Cross_Zero.Network
                     // Signal that all bytes have been received.
                     receiveDone.Set();
                 }
+                client.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReceiveCallback, state);
+                receiveDone.WaitOne();
             }
             catch (Exception e)
             {
@@ -143,14 +185,18 @@ namespace Cross_Zero.Network
             }
         }
 
-        private static void Send(Socket client, String data)
+        private void Send(Socket client, String data)
         {
             // Convert the string data to byte data using ASCII encoding.
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
+            byte[] byteData = Encoding.UTF8.GetBytes(data);
 
             // Begin sending the data to the remote device.
-            client.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), client);
+            client.BeginSend(byteData, 0, byteData.Length, 0, SendCallback, client);
+        }
+
+        private void Send(Socket client, byte[] data)
+        {
+            client.BeginSend(data, 0, data.Length, 0, SendCallback, client);
         }
 
         private static void SendCallback(IAsyncResult ar)
@@ -173,12 +219,32 @@ namespace Cross_Zero.Network
             }
         }
 
-        public void StartGame(int fieldSize)
+        public void StartNetwork()
         {
+            StartClient();
         }
 
-        public void EnableLine(bool flag, CrossZeroCommon.Vector2 pos, Logic.LogicLine.Positioning positioning)
+        public void SendStartGame(int fieldSize)
         {
+            int[] netData = {(int) NetworkCode.StartGame, fieldSize};
+            byte[] buffer = new byte[netData.Length * 4];
+            Buffer.BlockCopy(netData, 0, buffer, 0, buffer.Length);
+            Send(client, buffer);
+
         }
+
+        public void SendEnableLine(Vector2 pos, Logic.LogicLine.Positioning positioning)
+        {
+            int[] netData = {(int)NetworkCode.EnableLine, pos.X, pos.Y, (int) positioning};
+            byte[] buffer = new byte[netData.Length * 4];
+            Buffer.BlockCopy(netData, 0, buffer, 0, buffer.Length);
+            Send(client, buffer);
+        }
+
+        public event Action<string, string, string> ServerCreateComplete;
+        public event Action<string, string, string> ConnectToServerComplete;
+
+        public event Action<int> OnStartGame;
+        public event Action<Vector2, LogicLine.Positioning> OnLineEnable;
     }
 }

@@ -10,8 +10,23 @@ namespace Cross_Zero.Network
 {
     public interface INetworkGame
     {
-        void StartGame(int fieldSize);
-        void EnableLine(bool flag, Vector2 pos, LogicLine.Positioning positioning);
+        void StartNetwork();
 
+        void SendStartGame(int fieldSize);
+
+        void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning);
+
+        event Action<string, string, string> ServerCreateComplete;
+        event Action<string, string, string> ConnectToServerComplete;
+
+        event Action<int> OnStartGame;
+        event Action<Vector2, LogicLine.Positioning> OnLineEnable;
+    }
+
+    public enum NetworkCode
+    {
+        StartGame,
+        EnableLine,
+        CompleteRect
     }
 }

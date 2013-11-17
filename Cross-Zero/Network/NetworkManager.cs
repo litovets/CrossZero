@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using CrossZeroCommon;
+using Cross_Zero.Logic;
 
 namespace Cross_Zero.Network
 {
@@ -29,18 +33,51 @@ namespace Cross_Zero.Network
         public bool IsServer { get; set; }
         public INetworkGame NetworkGame { get; private set; }
 
-        public void StartServer()
+        public event Action<string, string, string> ServerIsCreated;
+
+        public string GetHostAddress()
         {
-            AsyncSocketServer.StartListening();
-            
-            NetworkGame = new AsyncSocketServer();
+            IPAddress[] addrList = Dns.GetHostEntry(Dns.GetHostName()).AddressList;
+            foreach (IPAddress ipAddress in addrList)
+            {
+                if (ipAddress.AddressFamily == AddressFamily.InterNetwork)
+                    return ipAddress.ToString();
+            }
+            return addrList[0].ToString();
         }
 
-        public void StartClient()
+        public void StartServer(string ipAddress, string port)
         {
-            AsyncSocketClient.StartClient();
+            NetworkGame = new AsyncSocketServer(ipAddress,port);
+            NetworkGame.OnLineEnable += OnLineEnable;
+            NetworkGame.ServerCreateComplete += OnServerCreateComplete;
+            NetworkGame.StartNetwork();
+        }
 
-            NetworkGame = new AsyncSocketClient();
+        private void OnServerCreateComplete(string name, string ipAddress, string port)
+        {
+            if (ServerIsCreated != null)
+            {
+                ServerIsCreated(name, ipAddress, port);
+            }
+        }
+
+        private void OnLineEnable(Vector2 vector2, LogicLine.Positioning positioning)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnStartGame(int fieldSize)
+        {
+            MultiplayerGameController.Instance.StartGame(fieldSize);
+        }
+
+        public void StartClient(string ipAddress, string port)
+        {
+            NetworkGame = new AsyncSocketClient(ipAddress, port);
+            NetworkGame.OnStartGame += OnStartGame;
+            NetworkGame.OnLineEnable += OnLineEnable;
+            NetworkGame.StartNetwork();
         }
     }
 }

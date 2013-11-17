@@ -66,5 +66,20 @@ namespace Cross_Zero.Logic
                 }
             }
         }
+
+        public LogicLine GetLine(Vector2 pos, LogicLine.Positioning positioning)
+        {
+            if (positioning == LogicLine.Positioning.Horizontal)
+            {
+                if (LineTop.Line.Pos == pos) return LineTop.Line;
+                if (LineBottom.Line.Pos == pos) return LineBottom.Line;
+            }
+            if (positioning == LogicLine.Positioning.Vertical)
+            {
+                if (LineLeft.Line.Pos == pos) return LineLeft.Line;
+                if (LineRight.Line.Pos == pos) return LineRight.Line;
+            }
+            return null;
+        }
     }
 }
