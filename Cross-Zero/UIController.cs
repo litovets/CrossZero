@@ -47,8 +47,10 @@ namespace Cross_Zero
 
         private void OnServerIsCreated(string name, string ipAddress, string port)
         {
-            List<string> list = new List<string> {name, ipAddress, port};
-            ConnectedListBox.ItemsSource = list;
+            //List<string> list = new List<string> {name, ipAddress, port};
+            ListBoxItem lbi = new ListBoxItem();
+            lbi.Content = string.Format("{0}\t{1}\t{2}", name, ipAddress, port);
+            ConnectedListBox.Items.Add(lbi);
         }
 
         private List<Label> signs;

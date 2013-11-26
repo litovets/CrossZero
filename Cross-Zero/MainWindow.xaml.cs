@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using Cross_Zero.Logic;
@@ -20,7 +21,7 @@ namespace Cross_Zero
             UIController.Instance.LinePos = LinePosLabel;
             UIController.Instance.ConnectedListBox = ConnectedListBox;
         }
-
+        
         private void OnEndCreateGame()
         {
             menuCanvas.Visibility = Visibility.Hidden;
@@ -108,8 +109,8 @@ namespace Cross_Zero
         {
             CreateMulGameCanvas.Visibility = Visibility.Hidden;
             UIController.Instance.StartListenNetworkEvents();
+            ConnectedListCanvas.Visibility = Visibility.Visible;
             NetworkManager.Instance.StartServer(IpAddressTextBox.Text, PortTextBox.Text);
-
         }
     }
 }

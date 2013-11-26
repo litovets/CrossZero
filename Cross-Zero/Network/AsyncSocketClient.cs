@@ -60,7 +60,7 @@ namespace Cross_Zero.Network
                 // Establish the remote endpoint for the socket.
                 // The name of the 
                 // remote device is "host.contoso.com".
-                IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
+                IPAddress ipAddress = serverAddress;//IPAddress.Parse("127.0.0.1");
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 // Create a TCP/IP socket.
@@ -72,7 +72,7 @@ namespace Cross_Zero.Network
 
                 // Connect to the remote endpoint.
                 client.BeginConnect(remoteEP, ConnectCallback, client);
-                connectDone.WaitOne();
+                //connectDone.WaitOne();
 
                 // Send test data to the remote device.
                 //Send(server, "This is a test<EOF>");
@@ -107,18 +107,18 @@ namespace Cross_Zero.Network
                 client.EndConnect(ar);
 
                 Console.WriteLine("Socket connected to {0}",
-                    client.RemoteEndPoint.ToString());
+                    client.RemoteEndPoint);
 
                 // Signal that the connection has been made.
-                connectDone.Set();
+                //connectDone.Set();
 
                 // Receive the response from the remote device.
                 Receive(client);
-                receiveDone.WaitOne();
+                //receiveDone.WaitOne();
                 
                 // Send test data to the remote device.
                 Send(client, "This is a test<EOF>");
-                sendDone.WaitOne();
+                //sendDone.WaitOne();
 
             }
             catch (Exception e)
@@ -174,10 +174,10 @@ namespace Cross_Zero.Network
                         response = state.sb.ToString();
                     }
                     // Signal that all bytes have been received.
-                    receiveDone.Set();
+                    //receiveDone.Set();
                 }
                 client.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReceiveCallback, state);
-                receiveDone.WaitOne();
+                //receiveDone.WaitOne();
             }
             catch (Exception e)
             {
@@ -211,7 +211,7 @@ namespace Cross_Zero.Network
                 Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
                 // Signal that all bytes have been sent.
-                sendDone.Set();
+                //sendDone.Set();
             }
             catch (Exception e)
             {

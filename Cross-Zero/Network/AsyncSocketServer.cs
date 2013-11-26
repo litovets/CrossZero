@@ -75,8 +75,8 @@ namespace Cross_Zero.Network
                 if (ServerCreateComplete != null)
                     ServerCreateComplete("Server", serverAddress.ToString(), port.ToString());
 
-                while (true)
-                {
+                //while (true)
+                //{
                     // Set the event to nonsignaled state.
                     //allDone.Reset();
 
@@ -85,11 +85,12 @@ namespace Cross_Zero.Network
 
                     // Wait until a connection is made before continuing.
                     //allDone.WaitOne();
-                }
+                //}
             }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                //MessageBox.Show("FAIL CREATE SERVER");
             }
         }
 
@@ -169,7 +170,8 @@ namespace Cross_Zero.Network
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
+                MessageBox.Show("FAIL SEND CALLBACK");
             }
         }
 
