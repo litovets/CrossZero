@@ -62,6 +62,7 @@
     <Compile Include="Network\AsyncSocketClient.cs" />
     <Compile Include="Network\AsyncSocketServer.cs" />
     <Compile Include="Network\INetworkGame.cs" />
+    <Compile Include="Network\NetworkCodes.cs" />
     <Compile Include="Network\NetworkManager.cs" />
     <Compile Include="UIController.cs" />
     <Page Include="MainWindow.xaml">

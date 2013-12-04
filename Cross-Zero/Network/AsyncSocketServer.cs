@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -32,6 +33,8 @@ namespace Cross_Zero.Network
 
         private IPAddress serverAddress;
         private int port;
+
+        private Socket client;
 
         public AsyncSocketServer(string ipAddress, string port)
         {
@@ -106,7 +109,10 @@ namespace Cross_Zero.Network
             // Create the state object.
             StateObject state = new StateObject();
             state.workSocket = handler;
+            client = handler;
             handler.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReadCallback, state);
+
+            SendUsername(MultiplayerGameController.Instance.CurrentPlayer.Name);
         }
 
         private void ReadCallback(IAsyncResult ar)
@@ -155,6 +161,11 @@ namespace Cross_Zero.Network
             handler.BeginSend(byteData, 0, byteData.Length, 0, SendCallback, handler);
         }
 
+        private void Send(Socket handler, byte[] data)
+        {
+            handler.BeginSend(data, 0, data.Length, 0, SendCallback, handler);
+        }
+
         private void SendCallback(IAsyncResult ar)
         {
             try
@@ -180,6 +191,15 @@ namespace Cross_Zero.Network
         public void StartNetwork()
         {
             StartListening();
+        }
+
+        public void SendUsername(string username)
+        {
+            byte[] code = BitConverter.GetBytes((int)NetworkCode.SendName);
+            byte[] data = Encoding.UTF8.GetBytes(username);
+            List<byte> allData = new List<byte>(code);
+            allData.AddRange(data);
+            Send(client, allData.ToArray());
         }
 
         public void SendStartGame(int fieldSize)

@@ -57,12 +57,12 @@ namespace Cross_Zero
 
         private void OnNextPlayerEventNetwork()
         {
-            ActivePlayerLabel.Content = MultiplayerGameController.Instance.players[GameController.Instance.ActivePlayerId].Name;
+            ActivePlayerLabel.Content = MultiplayerGameController.Instance.Players[GameController.Instance.ActivePlayerId].Name;
         }
 
         private void OnNextPlayerEventLocal()
         {
-            ActivePlayerLabel.Content = GameController.Instance.players[GameController.Instance.ActivePlayerId].Name;
+            ActivePlayerLabel.Content = GameController.Instance.Players[GameController.Instance.ActivePlayerId].Name;
         }
 
         private static UIController _instance;

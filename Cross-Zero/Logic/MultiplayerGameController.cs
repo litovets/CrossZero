@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using CrossZeroCommon;
@@ -46,7 +47,14 @@ namespace Cross_Zero.Logic
                 }
             }
 
+            Players = new Player[2];
 
+        }
+
+        public void CreatePlayer(int id, string name, string sign)
+        {
+            Players[id] = new Player(id, name, sign);
+            CurrentPlayer = Players[id];
         }
 
         private void LogicLineOnEnabled(object sender, LineEventArgs args)

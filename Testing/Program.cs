@@ -11,7 +11,7 @@ namespace Testing
         static void Main(string[] args)
         {
             int[] data = { 1, 260, 300, 0 };
-            byte[] buffer = new byte[data.Length * 4];
+            byte[] buffer = new byte[data.Length * sizeof(int)];
             Buffer.BlockCopy(data, 0, buffer, 0, buffer.Length);
             foreach (byte b in buffer)
             {
@@ -19,7 +19,7 @@ namespace Testing
             }
             Console.ReadLine();
 
-            int[] backData = new int[buffer.Length/4];
+            int[] backData = new int[buffer.Length/sizeof (int)];
             Buffer.BlockCopy(buffer, 0, backData, 0, buffer.Length);
             foreach (int i in backData)
             {

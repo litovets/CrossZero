@@ -13,7 +13,8 @@ namespace Cross_Zero.Logic
 
         public int FieldSize { get; set; }
 
-        public Player[] players { get; private set; }
+        public Player[] Players { get; protected set; }
+        public Player CurrentPlayer { get; protected set; }
         public int ActivePlayerId { get; private set; }
 
         public List<LogicLine> LogicLines { get; set; }
@@ -70,10 +71,10 @@ namespace Cross_Zero.Logic
                 }
             }
 
-            players = new[] {new Player(0, "Player1", "X"), new Player(1, "Player2", "O")};
+            Players = new[] {new Player(0, "Player1", "X"), new Player(1, "Player2", "O")};
             ActivePlayerId = 0;
 
-            UIController.Instance.ActivePlayerLabel.Content = players[ActivePlayerId].Name;
+            UIController.Instance.ActivePlayerLabel.Content = Players[ActivePlayerId].Name;
             
             if (EndCreateGame != null)
                 EndCreateGame();
@@ -81,21 +82,21 @@ namespace Cross_Zero.Logic
 
         protected void OnRectCompleted(LogicRectangle logicRectangle)
         {
-            players[ActivePlayerId].ActivatedRects++;
-            UIController.Instance.ActivateSigh(players[ActivePlayerId].Sign, logicRectangle);
-            if ((players[0].ActivatedRects + players[1].ActivatedRects) == RectsCount)
+            Players[ActivePlayerId].AddRect();
+            UIController.Instance.ActivateSigh(Players[ActivePlayerId].Sign, logicRectangle);
+            if ((Players[0].ActivatedRects + Players[1].ActivatedRects) == RectsCount)
             {
-                if (players[0].ActivatedRects > players[1].ActivatedRects)
+                if (Players[0].ActivatedRects > Players[1].ActivatedRects)
                 {
-                    MessageBox.Show(string.Format("{0} won with {1} rects.", players[0].Name, players[0].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(string.Format("{0} won with {1} rects.", Players[0].Name, Players[0].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                if (players[0].ActivatedRects < players[1].ActivatedRects)
+                if (Players[0].ActivatedRects < Players[1].ActivatedRects)
                 {
-                    MessageBox.Show(string.Format("{0} won with {1} rects.", players[1].Name, players[1].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(string.Format("{0} won with {1} rects.", Players[1].Name, Players[1].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
-                if (players[0].ActivatedRects == players[1].ActivatedRects)
+                if (Players[0].ActivatedRects == Players[1].ActivatedRects)
                 {
                     MessageBox.Show("Draw in this game", "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;

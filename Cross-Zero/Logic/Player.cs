@@ -13,16 +13,21 @@ namespace Cross_Zero.Logic
         public StateObject NetState { get; set; }
 
         //Logic
-        public int Id { get; set; }
+        public int Id { get; private set; }
         public string Sign { get; set; }
         public string Name { get; set; }
-        public int ActivatedRects { get; set; }
+        public int ActivatedRects { get; private set; }
 
         public Player(int id, string name, string sign)
         {
             Id = id;
             Name = name;
             Sign = sign;
+        }
+
+        public void AddRect()
+        {
+            ActivatedRects++;
         }
     }
 }

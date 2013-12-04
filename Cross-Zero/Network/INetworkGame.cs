@@ -12,6 +12,8 @@ namespace Cross_Zero.Network
     {
         void StartNetwork();
 
+        void SendUsername(string username);
+
         void SendStartGame(int fieldSize);
 
         void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning);
@@ -21,12 +23,5 @@ namespace Cross_Zero.Network
 
         event Action<int> OnStartGame;
         event Action<Vector2, LogicLine.Positioning> OnLineEnable;
-    }
-
-    public enum NetworkCode
-    {
-        StartGame,
-        EnableLine,
-        CompleteRect
     }
 }
