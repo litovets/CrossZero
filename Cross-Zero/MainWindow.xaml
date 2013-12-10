@@ -67,7 +67,7 @@
             <Button Name="CreateServerButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Click="CreateServerButton_Click">CREATE</Button>
             <Label Content="Create network game" Canvas.Left="128" Canvas.Top="10" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
             <Button Name="BackButtonCreateMulGame" Width="100" Height="50" Canvas.Left="10" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="BackButtonCreateMulGame_Click">BACK</Button>
-            <Button x:Name="ConnectToServerButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="CONNECT"/>
+            <Button x:Name="ConnectToServerButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="CONNECT" Click="ConnectToServerButton_Click"/>
         </Canvas>
 
         <Canvas x:Name="ConnectedListCanvas" Height="512" Width="512" Visibility="Hidden">

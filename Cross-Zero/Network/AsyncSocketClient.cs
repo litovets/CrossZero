@@ -179,20 +179,6 @@ namespace Cross_Zero.Network
             }
         }
 
-        private void SelectOperation(NetworkCode code, byte[] data)
-        {
-            switch (code)
-            {
-                case NetworkCode.SendName:
-                    byte[] stringData = new byte[data.Length - sizeof(int)];
-                    Array.Copy(data, sizeof(int), stringData, 0, data.Length - sizeof(int));
-                    string name = Encoding.UTF8.GetString(stringData);
-                    MessageBox.Show("ServerName = " + name);
-                    MultiplayerGameController.Instance.Players[0].Name = name;
-                    break;
-            }
-        }
-
         private void Send(Socket client, String data)
         {
             // Convert the string data to byte data using ASCII encoding.
@@ -224,6 +210,21 @@ namespace Cross_Zero.Network
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+            }
+        }
+
+        private void SelectOperation(NetworkCode code, byte[] data)
+        {
+            switch (code)
+            {
+                case NetworkCode.SendName:
+                    byte[] stringData = new byte[data.Length - sizeof(int)];
+                    Array.Copy(data, sizeof(int), stringData, 0, data.Length - sizeof(int));
+                    string name = Encoding.UTF8.GetString(stringData);
+                    MessageBox.Show("ServerName = " + name);
+                    MultiplayerGameController.Instance.CreatePlayer(0, name, "X", false);
+                    SendUsername(MultiplayerGameController.Instance.CurrentPlayer.Name);
+                    break;
             }
         }
 

@@ -117,38 +117,38 @@ namespace Cross_Zero.Network
 
         private void ReadCallback(IAsyncResult ar)
         {
-            string content = String.Empty;
-
-            // Retrieve the state object and the handler socket
-            // from the asynchronous state object.
-            StateObject state = (StateObject) ar.AsyncState;
-            Socket handler = state.workSocket;
-
-            //Read data from the client socket
-            int bytesRead = handler.EndReceive(ar);
-
-            if (bytesRead > 0)
+            try
             {
-                // There  might be more data, so store the data received so far.
-                state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
 
-                // Check for end-of-file tag. If it is not there, read 
-                // more data.
-                content = state.sb.ToString();
-                if (content.IndexOf("<EOF>") > -1)
-                {
-                    // All the data has been read from the 
-                    // client. Display it on the console.
-                    Console.WriteLine("Read {0} bytes from socket. \n Data : {1}", content.Length, content);
+                string content = String.Empty;
 
-                    // Echo the data back to the client.
-                    Send(handler, content);
-                }
-                else
+                // Retrieve the state object and the handler socket
+                // from the asynchronous state object.
+                StateObject state = (StateObject) ar.AsyncState;
+                Socket handler = state.workSocket;
+
+                //Read data from the client socket
+                int bytesRead = handler.EndReceive(ar);
+
+                NetworkCode code = (NetworkCode) BitConverter.ToInt32(state.buffer, 0);
+                byte[] data = new byte[bytesRead];
+                Array.Copy(state.buffer, 0, data, 0, bytesRead);
+                SelectOperation(code, data);
+
+                if (bytesRead > 0)
                 {
+                    // There  might be more data, so store the data received so far.
+                    //state.sb.Append(Encoding.UTF8.GetString(state.buffer, 0, bytesRead));
+
+                    // Check for end-of-file tag. If it is not there, read 
+                    // more data.
                     // Not all data received. Get more.
                     handler.BeginReceive(state.buffer, 0, StateObject.bufferSize, 0, ReadCallback, state);
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -176,13 +176,27 @@ namespace Cross_Zero.Network
                 // Complete sending the data to the remote device.
                 int bytesSend = handler.EndSend(ar);
 
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+                //handler.Shutdown(SocketShutdown.Both);
+                //handler.Close();
             }
             catch (Exception ex)
             {
                 //MessageBox.Show(ex.Message);
                 MessageBox.Show("FAIL SEND CALLBACK");
+            }
+        }
+
+        private void SelectOperation(NetworkCode code, byte[] data)
+        {
+            switch (code)
+            {
+                case NetworkCode.SendName:
+                    byte[] stringData = new byte[data.Length - sizeof(int)];
+                    Array.Copy(data, sizeof(int), stringData, 0, data.Length - sizeof(int));
+                    string name = Encoding.UTF8.GetString(stringData);
+                    MessageBox.Show("ClientName = " + name);
+                    MultiplayerGameController.Instance.CreatePlayer(1, name, "O", false);
+                    break;
             }
         }
 

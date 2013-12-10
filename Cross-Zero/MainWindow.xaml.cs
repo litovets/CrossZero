@@ -111,9 +111,20 @@ namespace Cross_Zero
             UIController.Instance.StartListenNetworkEvents();
             ConnectedListCanvas.Visibility = Visibility.Visible;
             //Create player
-            MultiplayerGameController.Instance.CreatePlayer(0, PlayerNameTextBox.Text, "X");
+            MultiplayerGameController.Instance.CreatePlayer(0, PlayerNameTextBox.Text, "X", true);
             //Start server
             NetworkManager.Instance.StartServer(IpAddressTextBox.Text, PortTextBox.Text);
+        }
+
+        private void ConnectToServerButton_Click(object sender, RoutedEventArgs e)
+        {
+            CreateMulGameCanvas.Visibility = Visibility.Hidden;
+            ConnectedListCanvas.Visibility = Visibility.Visible;
+
+            //Create player
+            MultiplayerGameController.Instance.CreatePlayer(1,PlayerNameTextBox.Text, "O", true);
+            //Start server
+            NetworkManager.Instance.StartClient(IpAddressTextBox.Text, PortTextBox.Text);
         }
     }
 }

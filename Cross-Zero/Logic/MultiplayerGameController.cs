@@ -46,15 +46,14 @@ namespace Cross_Zero.Logic
                     _gameField[i][j].RectCompleted += OnRectCompleted;
                 }
             }
-
-            Players = new Player[2];
-
         }
 
-        public void CreatePlayer(int id, string name, string sign)
+        public void CreatePlayer(int id, string name, string sign, bool setCurrent)
         {
+            if (Players == null)
+                Players = new Player[2];
             Players[id] = new Player(id, name, sign);
-            CurrentPlayer = Players[id];
+            if (setCurrent) CurrentPlayer = Players[id];
         }
 
         private void LogicLineOnEnabled(object sender, LineEventArgs args)
