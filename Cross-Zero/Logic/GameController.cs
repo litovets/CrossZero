@@ -15,13 +15,15 @@ namespace Cross_Zero.Logic
 
         public Player[] Players { get; protected set; }
         public Player CurrentPlayer { get; protected set; }
-        public int ActivePlayerId { get; private set; }
+        public int ActivePlayerId { get; protected set; }
 
         public List<LogicLine> LogicLines { get; set; }
-        public int RectsCount { get; private set; }
+        public int RectsCount { get; protected set; }
 
         public event Action NextPlayerEvent;
         public event Action EndCreateGame;
+
+        public bool IsGameStarted { get; protected set; }
 
         public static GameController Instance
         {
@@ -29,12 +31,12 @@ namespace Cross_Zero.Logic
             {
                 if (NetworkManager.Instance.IsMultiplayerGame)
                 {
-                    if (_instance == null)
+                    /*if (_instance == null)
                     {
                         _instance = MultiplayerGameController.Instance;
                         return _instance;
-                    }
-                    return _instance;
+                    }*/
+                    return MultiplayerGameController.Instance;
                 }
 
                 if (_instance == null)
@@ -49,7 +51,7 @@ namespace Cross_Zero.Logic
 
         private static GameController _instance;
 
-        private bool turnAgain;
+        protected bool TurnAgain { get; set; }
 
         protected LogicRectangle[][] _gameField;
 
@@ -75,9 +77,9 @@ namespace Cross_Zero.Logic
             ActivePlayerId = 0;
 
             UIController.Instance.ActivePlayerLabel.Content = Players[ActivePlayerId].Name;
-            
-            if (EndCreateGame != null)
-                EndCreateGame();
+
+            OnEndCreateGame();
+            IsGameStarted = true;
         }
 
         protected void OnRectCompleted(LogicRectangle logicRectangle)
@@ -88,12 +90,16 @@ namespace Cross_Zero.Logic
             {
                 if (Players[0].ActivatedRects > Players[1].ActivatedRects)
                 {
-                    MessageBox.Show(string.Format("{0} won with {1} rects.", Players[0].Name, Players[0].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(
+                        string.Format("{0} won with {1} rects.", Players[0].Name, Players[0].ActivatedRects),
+                        "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 if (Players[0].ActivatedRects < Players[1].ActivatedRects)
                 {
-                    MessageBox.Show(string.Format("{0} won with {1} rects.", Players[1].Name, Players[1].ActivatedRects), "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(
+                        string.Format("{0} won with {1} rects.", Players[1].Name, Players[1].ActivatedRects),
+                        "Game Over", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
                 }
                 if (Players[0].ActivatedRects == Players[1].ActivatedRects)
@@ -102,14 +108,14 @@ namespace Cross_Zero.Logic
                     return;
                 }
             }
-            turnAgain = true;
+            TurnAgain = true;
         }
 
         private void LogicLineOnEnabled(object sender, LineEventArgs e)
         {
             NextPlayer();
-            if (NextPlayerEvent != null)
-                NextPlayerEvent();
+            OnNextPlayer();
+            TurnAgain = false;
         }
 
         public void CreateGame(int fieldSize)
@@ -123,9 +129,8 @@ namespace Cross_Zero.Logic
 
         public void NextPlayer()
         {
-            if (turnAgain)
+            if (TurnAgain)
             {
-                turnAgain = false;
                 return;
             }
 
@@ -134,5 +139,27 @@ namespace Cross_Zero.Logic
             else
                 ActivePlayerId++;
         }
+
+        #region Event handlers
+
+        public void OnEndCreateGame()
+        {
+            Action action = EndCreateGame;
+            if (action != null)
+            {
+                action();
+            }
+        }
+
+        public void OnNextPlayer()
+        {
+            Action action = NextPlayerEvent;
+            if (action != null)
+            {
+                action();
+            }
+        }
+
+        #endregion
     }
 }

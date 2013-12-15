@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -34,6 +35,9 @@ namespace Cross_Zero.Network
         public INetworkGame NetworkGame { get; private set; }
 
         public event Action<string, string, string> ServerIsCreated;
+        public event Action<string, string, string> ClientIsConnected;
+        public event Action<int> StartGameEvent;
+
 
         public string GetHostAddress()
         {
@@ -51,7 +55,16 @@ namespace Cross_Zero.Network
             NetworkGame = new AsyncSocketServer(ipAddress,port);
             NetworkGame.OnLineEnable += OnLineEnable;
             NetworkGame.ServerCreateComplete += OnServerCreateComplete;
+            NetworkGame.ConnectToServerComplete += OnConnectToServerComplete;
             NetworkGame.StartNetwork();
+        }
+
+        private void OnConnectToServerComplete(string name, string ipAddress, string port)
+        {
+            if (ClientIsConnected != null)
+            {
+                ClientIsConnected(name, ipAddress, port);
+            }
         }
 
         private void OnServerCreateComplete(string name, string ipAddress, string port)
@@ -62,14 +75,17 @@ namespace Cross_Zero.Network
             }
         }
 
-        private void OnLineEnable(Vector2 vector2, LogicLine.Positioning positioning)
+        private void OnLineEnable(Vector2 pos, LogicLine.Positioning positioning, int nextTurn)
         {
-            throw new NotImplementedException();
+            MultiplayerGameController.Instance.EnableLine(pos, positioning, nextTurn);
         }
 
         private void OnStartGame(int fieldSize)
         {
-            MultiplayerGameController.Instance.StartGame(fieldSize);
+            if (StartGameEvent != null)
+            {
+                StartGameEvent(fieldSize);
+            }
         }
 
         public void StartClient(string ipAddress, string port)
@@ -77,7 +93,14 @@ namespace Cross_Zero.Network
             NetworkGame = new AsyncSocketClient(ipAddress, port);
             NetworkGame.OnStartGame += OnStartGame;
             NetworkGame.OnLineEnable += OnLineEnable;
+            NetworkGame.ServerCreateComplete += OnServerCreateComplete;
+            NetworkGame.ConnectToServerComplete += OnConnectToServerComplete;
             NetworkGame.StartNetwork();
+        }
+
+        public void StartGame(int fieldSize)
+        {
+            NetworkGame.SendStartGame(fieldSize);
         }
     }
 }

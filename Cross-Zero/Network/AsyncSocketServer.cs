@@ -76,7 +76,7 @@ namespace Cross_Zero.Network
                 listener.Listen(100);
 
                 if (ServerCreateComplete != null)
-                    ServerCreateComplete("Server", serverAddress.ToString(), port.ToString());
+                    ServerCreateComplete(MultiplayerGameController.Instance.CurrentPlayer.Name, serverAddress.ToString(), port.ToString());
 
                 //while (true)
                 //{
@@ -148,7 +148,7 @@ namespace Cross_Zero.Network
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("In ReadCallback\n" + ex.Message);
             }
         }
 
@@ -194,8 +194,25 @@ namespace Cross_Zero.Network
                     byte[] stringData = new byte[data.Length - sizeof(int)];
                     Array.Copy(data, sizeof(int), stringData, 0, data.Length - sizeof(int));
                     string name = Encoding.UTF8.GetString(stringData);
-                    MessageBox.Show("ClientName = " + name);
+                    //MessageBox.Show("ClientName = " + name);
                     MultiplayerGameController.Instance.CreatePlayer(1, name, "O", false);
+                    if (ConnectToServerComplete != null)
+                    {
+                        ConnectToServerComplete(name, ((IPEndPoint)client.RemoteEndPoint).Address.ToString(),
+                            ((IPEndPoint)client.RemoteEndPoint).Port.ToString());
+                    }
+                    break;
+
+                case NetworkCode.EnableLine:
+                    byte[] buffer = new byte[data.Length - sizeof(int)];
+                    Array.Copy(data, sizeof(int), buffer, 0, data.Length - sizeof(int));
+                    int[] backData = new int[buffer.Length/sizeof (int)];
+                    Buffer.BlockCopy(buffer, 0, backData, 0, buffer.Length);
+                    Vector2 pos = new Vector2(backData[0], backData[1]);
+                    LogicLine.Positioning positioning = (LogicLine.Positioning) backData[2];
+                    int nextTurn = backData[3];
+                    //MessageBox.Show(pos + "\n" + positioning);
+                    OnLineEnable(pos, positioning, nextTurn);
                     break;
             }
         }
@@ -218,17 +235,25 @@ namespace Cross_Zero.Network
 
         public void SendStartGame(int fieldSize)
         {
+            int[] netData = { (int)NetworkCode.StartGame, fieldSize };
+            byte[] buffer = new byte[netData.Length * sizeof(int)];
+            Buffer.BlockCopy(netData, 0, buffer, 0, buffer.Length);
+            Send(client, buffer);
         }
 
-        public void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning)
+        public void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning, int nextTurn)
         {
+            int[] netData = { (int)NetworkCode.EnableLine, pos.X, pos.Y, (int)positioning, nextTurn };
+            byte[] buffer = new byte[netData.Length * sizeof(int)];
+            Buffer.BlockCopy(netData, 0, buffer, 0, buffer.Length);
+            Send(client, buffer);
         }
 
         public event Action<string, string, string> ServerCreateComplete;
         public event Action<string, string, string> ConnectToServerComplete;
 
         public event Action<int> OnStartGame;
-        public event Action<Vector2, LogicLine.Positioning> OnLineEnable;
+        public event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;
 
         #endregion
     }

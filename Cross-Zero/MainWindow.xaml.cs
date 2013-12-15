@@ -18,8 +18,10 @@ namespace Cross_Zero
 
             UIController.Instance.Canvas = gameCanvas;
             UIController.Instance.ActivePlayerLabel = ActivePlayerLabel;
-            UIController.Instance.LinePos = LinePosLabel;
+            //UIController.Instance.LinePos = LinePosLabel;
             UIController.Instance.ConnectedListBox = ConnectedListBox;
+            UIController.Instance.StartGameButton = StartNetGameButton;
+            UIController.Instance.ConnectionListCanvas = ConnectedListCanvas;
         }
         
         private void OnEndCreateGame()
@@ -47,6 +49,7 @@ namespace Cross_Zero
             ComboBoxItem cbi = (ComboBoxItem) sizeComboBox.ItemContainerGenerator.ContainerFromIndex(sizeComboBox.SelectedIndex);
             if (cbi == null) return;
             GameController.Instance.StartGame(int.Parse((string)cbi.Content));
+            UIController.Instance.StartListenNextTurnEvent();
 
         }
 
@@ -91,6 +94,7 @@ namespace Cross_Zero
             ConnectToServerButton.Visibility = Visibility.Hidden;
             CreateMulGameCanvas.Visibility = Visibility.Visible;
             CreateServerButton.Visibility = Visibility.Visible;
+            NetworkSetupLabel.Content = "Create network game";
             IpAddressTextBox.Text = NetworkManager.Instance.GetHostAddress();
             PortTextBox.Text = 11000.ToString();
         }
@@ -101,12 +105,15 @@ namespace Cross_Zero
             CreateServerButton.Visibility = Visibility.Hidden;
             CreateMulGameCanvas.Visibility = Visibility.Visible;
             ConnectToServerButton.Visibility = Visibility.Visible;
+            NetworkSetupLabel.Content = "Connect to server";
             IpAddressTextBox.Text = NetworkManager.Instance.GetHostAddress();
             PortTextBox.Text = 11000.ToString();
         }
 
         private void CreateServerButton_Click(object sender, RoutedEventArgs e)
         {
+            NetworkManager.Instance.IsServer = true;
+            NetworkManager.Instance.IsMultiplayerGame = true;
             CreateMulGameCanvas.Visibility = Visibility.Hidden;
             UIController.Instance.StartListenNetworkEvents();
             ConnectedListCanvas.Visibility = Visibility.Visible;
@@ -118,13 +125,33 @@ namespace Cross_Zero
 
         private void ConnectToServerButton_Click(object sender, RoutedEventArgs e)
         {
+            NetworkManager.Instance.IsMultiplayerGame = true;
             CreateMulGameCanvas.Visibility = Visibility.Hidden;
             ConnectedListCanvas.Visibility = Visibility.Visible;
+
+            UIController.Instance.StartListenNetworkEvents();
 
             //Create player
             MultiplayerGameController.Instance.CreatePlayer(1,PlayerNameTextBox.Text, "O", true);
             //Start server
             NetworkManager.Instance.StartClient(IpAddressTextBox.Text, PortTextBox.Text);
+        }
+
+        private void StartNetGameButton_Click(object sender, RoutedEventArgs e)
+        {
+            MultiplayerGameController.Instance.EndCreateGame += OnEndCreateNetGame;
+
+            //ComboBoxItem cbi = (ComboBoxItem)sizeComboBox.ItemContainerGenerator.ContainerFromIndex(sizeComboBox.SelectedIndex);
+            //if (cbi == null) return;
+            //GameController.Instance.StartGame(int.Parse((string)cbi.Content));
+            MultiplayerGameController.Instance.StartGame(9);
+            NetworkManager.Instance.StartGame(9);
+        }
+
+        private void OnEndCreateNetGame()
+        {
+            ConnectedListCanvas.Visibility = Visibility.Hidden;
+            gameCanvas.Visibility = Visibility.Visible;
         }
     }
 }

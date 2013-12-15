@@ -27,6 +27,7 @@ namespace Cross_Zero.Logic
         public Ellipse UIPointBottom { get; set; }
         public Line UiLine { get { return _uiLine; }}
         public Vector2 Pos {get { return _pos; }}
+        public Positioning LinePositioning {get { return _positioning; }}
 
         private readonly Line _uiLine;
         private Vector2 _pos;
@@ -46,13 +47,18 @@ namespace Cross_Zero.Logic
 
         private void UiLineOnMouseLeftButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
+            if (NetworkManager.Instance.IsMultiplayerGame && GameController.Instance.IsGameStarted &&
+                (GameController.Instance.ActivePlayerId != GameController.Instance.CurrentPlayer.Id))
+                return;
             //Send event
             LineEventArgs lineEventArgs = new LineEventArgs { pos = _pos, positioning = _positioning };
-            LineEnabled(this, lineEventArgs);
 
-            UIController.Instance.LinePos.Content = _pos;
+            //UIController.Instance.LinePos.Content = _pos;
 
             EnableLine(true);
+
+            if (LineEnabled != null)
+                LineEnabled(this, lineEventArgs);
         }
 
         public void EnableLine(bool flag)

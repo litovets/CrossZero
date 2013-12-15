@@ -16,12 +16,12 @@ namespace Cross_Zero.Network
 
         void SendStartGame(int fieldSize);
 
-        void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning);
+        void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning, int nextTurn);
 
         event Action<string, string, string> ServerCreateComplete;
         event Action<string, string, string> ConnectToServerComplete;
 
         event Action<int> OnStartGame;
-        event Action<Vector2, LogicLine.Positioning> OnLineEnable;
+        event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;
     }
 }

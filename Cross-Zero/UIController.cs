@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using CrossZeroCommon;
 using Cross_Zero.Logic;
 using Cross_Zero.Network;
+
+public delegate void NetworkEvent();
 
 namespace Cross_Zero
 {
@@ -19,6 +23,8 @@ namespace Cross_Zero
         public SolidColorBrush LineEnterColor = Brushes.Black;
         public SolidColorBrush LineLeaveColor = Brushes.LightSkyBlue;
         public SolidColorBrush LineEnabledColor = Brushes.Black;
+
+        private object savedData;
 
         public static UIController Instance
         {
@@ -35,42 +41,76 @@ namespace Cross_Zero
 
         private UIController()
         {
-            signs = new List<Label>();
-
-            GameController.Instance.NextPlayerEvent += OnNextPlayerEventLocal;
         }
 
         public void StartListenNetworkEvents()
         {
             NetworkManager.Instance.ServerIsCreated += OnServerIsCreated;
+            NetworkManager.Instance.ClientIsConnected += OnServerIsCreated;
+            NetworkManager.Instance.StartGameEvent += OnStartGameEvent;
+            StartListenNextTurnEvent();
+        }
+
+        public void StartListenNextTurnEvent()
+        {
+            GameController.Instance.NextPlayerEvent += OnNextPlayerEventLocal;
+        }
+
+        private void OnStartGameEvent(int fieldSize)
+        {
+            savedData = fieldSize;
+            ConnectedListBox.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new NetworkEvent(ShowGameCanvas));
+        }
+
+        private void ShowGameCanvas()
+        {
+            ConnectionListCanvas.Visibility = Visibility.Hidden;
+            Canvas.Visibility = Visibility.Visible;
+            int fieldSize = (int) savedData;
+            MultiplayerGameController.Instance.StartGame(fieldSize);
         }
 
         private void OnServerIsCreated(string name, string ipAddress, string port)
         {
+            string[] data = {name, ipAddress, port};
+            savedData = data;
+
             //List<string> list = new List<string> {name, ipAddress, port};
-            ListBoxItem lbi = new ListBoxItem();
-            lbi.Content = string.Format("{0}\t{1}\t{2}", name, ipAddress, port);
-            ConnectedListBox.Items.Add(lbi);
+            ConnectedListBox.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new NetworkEvent(CreateNewListBoxItem));
+            
         }
 
-        private List<Label> signs;
-
-        private void OnNextPlayerEventNetwork()
+        private void CreateNewListBoxItem()
         {
-            ActivePlayerLabel.Content = MultiplayerGameController.Instance.Players[GameController.Instance.ActivePlayerId].Name;
+            ListBoxItem lbi = new ListBoxItem();
+            string[] data = (string[]) savedData;
+            lbi.Content = string.Format("{0}\t{1}\t{2}", data[0], data[1], data[2]);
+            ConnectedListBox.Items.Add(lbi);
+            if (NetworkManager.Instance.IsServer && ConnectedListBox.Items.Count == 2)
+                StartGameButton.Visibility = Visibility.Visible;
+
         }
 
         private void OnNextPlayerEventLocal()
         {
-            ActivePlayerLabel.Content = GameController.Instance.Players[GameController.Instance.ActivePlayerId].Name;
+            ActivePlayerLabel.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new NetworkEvent(SetNextPlayerName));
         }
 
+        private void SetNextPlayerName()
+        {
+            ActivePlayerLabel.Content = "Ход " + GameController.Instance.Players[GameController.Instance.ActivePlayerId].Name;
+        }
+        
         private static UIController _instance;
         
         public Canvas Canvas { get; set; }
         public Label ActivePlayerLabel { get; set; }
         public Label LinePos { get; set; }
         public ListBox ConnectedListBox { get; set; }
+        public Button StartGameButton { get; set; }
+        public Canvas ConnectionListCanvas { get; set; }
+
+        private LogicLine lineForEnable;
 
         public Line GetNewLine()
         {
@@ -159,6 +199,17 @@ namespace Cross_Zero
             line.Stroke = LineEnabledColor;
             line.MouseEnter -= LineOnMouseEnter;
             line.MouseLeave -= LineOnMouseLeave;
+        }
+
+        public void NetRequestEnableLine(LogicLine line)
+        {
+            lineForEnable = line;
+            line.UiLine.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new NetworkEvent(EnableLine));
+        }
+
+        private void EnableLine()
+        {
+            lineForEnable.EnableLine(true);
         }
 
         #endregion
