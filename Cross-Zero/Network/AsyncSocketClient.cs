@@ -243,7 +243,7 @@ namespace Cross_Zero.Network
                     backData = new int[buffer.Length/sizeof (int)];
                     Buffer.BlockCopy(buffer, 0, backData, 0, buffer.Length);
                     int fieldSize = backData[0];
-                    MessageBox.Show(fieldSize.ToString());
+                    //MessageBox.Show(fieldSize.ToString());
                     OnStartGame(fieldSize);
                     break;
 
@@ -253,7 +253,7 @@ namespace Cross_Zero.Network
                     backData = new int[buffer.Length/sizeof (int)];
                     Buffer.BlockCopy(buffer, 0, backData, 0, buffer.Length);
                     Vector2 pos = new Vector2(backData[0], backData[1]);
-                    LogicLine.Positioning positioning = (LogicLine.Positioning) backData[2];
+                    var positioning = (LogicLine.Positioning) backData[2];
                     int nextTurn = backData[3];
                     //MessageBox.Show(pos + "\n" + positioning);
                     OnLineEnable(pos, positioning, nextTurn);

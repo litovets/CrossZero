@@ -39,7 +39,7 @@
         </StackPanel>
     </Window.Resources>
     <Canvas Height="512" Width="512">
-        <Canvas x:Name="menuCanvas" Height="512" Width="512" Visibility="Visible">
+        <Canvas x:Name="menuCanvas" Height="512" Width="512" Visibility="Hidden">
             <Button Name="StartMulGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="170" FontSize="20" FontWeight="Bold" Click="StartMulGameButton_Click">MULTIPLAYER</Button>
             <Button Name="SingleGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="230" FontSize="20" FontWeight="Bold" Click="SingleGameButton_Click">SINGLE</Button>
             <Button Name="ExitButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="290" FontSize="20" FontWeight="Bold" Click="ExitButton_Click">EXIT</Button>
@@ -58,16 +58,28 @@
         </Canvas>
 
         <Canvas x:Name="CreateMulGameCanvas" Height="512" Width="512" Visibility="Hidden">
-            <TextBox Name="IpAddressTextBox" Height="23" Canvas.Left="128" TextWrapping="Wrap" Canvas.Top="165" Width="182" BorderBrush="Black"/>
-            <TextBox Name="PortTextBox" Height="23" Canvas.Left="315" TextWrapping="Wrap" Canvas.Top="165" Width="64" BorderBrush="Black"/>
-            <Label Content="IP Address :" Canvas.Left="128" Canvas.Top="139"/>
-            <Label Content="port :" Canvas.Left="310" Canvas.Top="139"/>
-            <TextBox Name="PlayerNameTextBox" Height="23" Canvas.Left="128" TextWrapping="Wrap" Canvas.Top="102" Width="182" BorderBrush="Black"/>
-            <Label Content="Player Name :" Canvas.Left="128" Canvas.Top="76"/>
-            <Button Name="CreateServerButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Click="CreateServerButton_Click">CREATE</Button>
+            <TextBox Name="IpAddressTextBox" Height="23" Canvas.Left="160" TextWrapping="Wrap" Canvas.Top="167" Width="182" BorderBrush="Black"/>
+            <TextBox Name="PortTextBox" Height="23" Canvas.Left="347" TextWrapping="Wrap" Canvas.Top="167" Width="64" BorderBrush="Black"/>
+            <Label Content="IP Address :" Canvas.Left="160" Canvas.Top="141"/>
+            <Label Content="port :" Canvas.Left="342" Canvas.Top="141"/>
+            <TextBox Name="PlayerNameTextBox" Height="23" Canvas.Left="160" TextWrapping="Wrap" Canvas.Top="104" Width="182" BorderBrush="Black"/>
+            <Label Content="Player Name :" Canvas.Left="160" Canvas.Top="78"/>
+            <Button Name="CreateServerButton" Width="150" Height="50" Canvas.Left="352" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="CreateServerButton_Click">CREATE</Button>
             <Label Name="NetworkSetupLabel" Content="Create network game" Canvas.Left="128" Canvas.Top="10" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
             <Button Name="BackButtonCreateMulGame" Width="100" Height="50" Canvas.Left="10" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="BackButtonCreateMulGame_Click">BACK</Button>
-            <Button x:Name="ConnectToServerButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="CONNECT" Click="ConnectToServerButton_Click"/>
+            <Button Name="ConnectToServerButton" Width="150" Height="50" Canvas.Left="352" Canvas.Top="452" FontSize="20" FontWeight="Bold" Content="CONNECT" Click="ConnectToServerButton_Click"/>
+            <ComboBox Name="NetSizeComboBox" Canvas.Left="198" Canvas.Top="223" Width="120" Foreground="Black" BorderBrush="#FF1D1B1B" IsReadOnly="True" Background="#FF383838" Text="Select" Visibility="Hidden">
+                <ComboBoxItem Content="5" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="7" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="9" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="11" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="13" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="15" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="17" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="19" Foreground="White" Background="#FF383838"/>
+                <ComboBoxItem Content="21" Foreground="#8EFFFFFF" Background="#FF383838"/>
+            </ComboBox>
+            <Label Name="FieldSizeLabel" Content="Размер игрового поля" Canvas.Left="190" Canvas.Top="197" Visibility="Hidden"/>
         </Canvas>
 
         <Canvas x:Name="ConnectedListCanvas" Height="512" Width="512" Visibility="Hidden">
@@ -75,7 +87,10 @@
             <Button x:Name="StartNetGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="START" Visibility="Hidden" Click="StartNetGameButton_Click"/>
         </Canvas>
 
-        <Canvas Name="optionsCanvas" Height="512" Width="512" Visibility="Hidden">
+        <Canvas Name="optionsCanvas" Height="512" Width="512" Visibility="Visible">
+            <Grid Width="512">
+                <Label Content="Create game for two players" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
+            </Grid>
             <Button Name="StartButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="200" FontSize="20" FontWeight="Bold" Click="StartButton_Click">START</Button>
             <ComboBox Name="sizeComboBox" Canvas.Left="198" Canvas.Top="298" Width="120" Foreground="Black" BorderBrush="#FF1D1B1B" IsReadOnly="True" Background="#FF383838" Text="Select">
                 <ComboBoxItem Content="5" Foreground="White" Background="#FF383838"/>
@@ -89,6 +104,7 @@
                 <ComboBoxItem Content="21" Foreground="#8EFFFFFF" Background="#FF383838"/>
             </ComboBox>
             <Label Content="Размер игрового поля" Canvas.Left="190" Canvas.Top="272"/>
+            <Button Name="BackButtonOptGame" Width="100" Height="50" Canvas.Left="10" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="BackButtonOptGame_Click">BACK</Button>
         </Canvas>
 
         <Canvas x:Name="gameCanvas" Height="512" Width="512" Visibility="Hidden">

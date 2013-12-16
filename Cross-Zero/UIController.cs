@@ -21,8 +21,11 @@ namespace Cross_Zero
         public const int PointRadius = LineThickness + 1;
         public const int CellWidth = 24;
         public SolidColorBrush LineEnterColor = Brushes.Black;
-        public SolidColorBrush LineLeaveColor = Brushes.LightSkyBlue;
-        public SolidColorBrush LineEnabledColor = Brushes.Black;
+        public SolidColorBrush LineLeaveColor = Brushes.Transparent;
+        public SolidColorBrush P1LineEnabledColor = Brushes.Black;
+        public SolidColorBrush P2LineEnabledColor = Brushes.Red;
+
+        public event Action UiOperationComplete;
 
         private object savedData;
 
@@ -158,7 +161,7 @@ namespace Cross_Zero
         public Ellipse GetNewPoint(Vector2 pos)
         {
             Ellipse point = new Ellipse {Width = PointRadius, Height = PointRadius};
-            point.Fill = LineEnabledColor;
+            point.Fill = P1LineEnabledColor;
             Canvas.SetLeft(point, pos.X - PointRadius*0.5f);
             Canvas.SetTop(point, pos.Y - PointRadius*0.5f);
             Canvas.Children.Add(point);
@@ -172,6 +175,10 @@ namespace Cross_Zero
             label.FontSize = 20;
             label.FontWeight = FontWeights.Bold;
             label.Padding = new Thickness(0,0,0,0);
+            if (GameController.Instance.ActivePlayerId == 0)
+                label.Foreground = P1LineEnabledColor;
+            else
+                label.Foreground = P2LineEnabledColor;
 
             double x = rect.LineLeft.Line.UiLine.X1+4;
             double y = rect.LineLeft.Line.UiLine.Y1-3;
@@ -196,7 +203,11 @@ namespace Cross_Zero
 
         public void EnableLine(Line line)
         {
-            line.Stroke = LineEnabledColor;
+            if (GameController.Instance.ActivePlayerId == 0)
+                line.Stroke = P1LineEnabledColor;
+            else
+                line.Stroke = P2LineEnabledColor;
+
             line.MouseEnter -= LineOnMouseEnter;
             line.MouseLeave -= LineOnMouseLeave;
         }
@@ -210,6 +221,8 @@ namespace Cross_Zero
         private void EnableLine()
         {
             lineForEnable.EnableLine(true);
+            if (UiOperationComplete != null)
+                UiOperationComplete();
         }
 
         #endregion

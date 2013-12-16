@@ -24,9 +24,14 @@ namespace Cross_Zero.Logic
             }
         }
 
-        protected MultiplayerGameController(){}
+        protected MultiplayerGameController()
+        {
+            UIController.Instance.UiOperationComplete += OnSetNextPlayer;
+        }
 
         private static MultiplayerGameController _instance;
+
+        private int nextTurn;
 
         public override void StartGame(int fieldSize)
         {
@@ -48,7 +53,7 @@ namespace Cross_Zero.Logic
 
             ActivePlayerId = 0;
 
-            UIController.Instance.ActivePlayerLabel.Content = Players[ActivePlayerId].Name;
+            UIController.Instance.ActivePlayerLabel.Content = "Ход " + Players[ActivePlayerId].Name;
 
             OnEndCreateGame();
             IsGameStarted = true;
@@ -82,9 +87,15 @@ namespace Cross_Zero.Logic
                 where logicLine.Pos == pos && logicLine.LinePositioning == positioning
                 select logicLine;
             LogicLine line = result.First();
-            
+
+            Instance.nextTurn = nextTurn;
 
             UIController.Instance.NetRequestEnableLine(line);
+            
+        }
+
+        private void OnSetNextPlayer()
+        {
             if (nextTurn == 1)
             {
                 TurnAgain = false;

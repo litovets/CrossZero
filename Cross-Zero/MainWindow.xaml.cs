@@ -12,6 +12,8 @@ namespace Cross_Zero
     /// </summary>
     public partial class MainWindow : Window
     {
+        private int savedFieldSize = 5;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -88,12 +90,20 @@ namespace Cross_Zero
             NetworkMenuCanvas.Visibility = Visibility.Visible;
         }
 
+        private void BackButtonOptGame_Click(object sender, RoutedEventArgs e)
+        {
+            optionsCanvas.Visibility = Visibility.Hidden;
+            SelectMulGameCanvas.Visibility = Visibility.Visible;
+        }
+
         private void CreateMulGameButton_Click(object sender, RoutedEventArgs e)
         {
             NetworkMenuCanvas.Visibility = Visibility.Hidden;
             ConnectToServerButton.Visibility = Visibility.Hidden;
             CreateMulGameCanvas.Visibility = Visibility.Visible;
             CreateServerButton.Visibility = Visibility.Visible;
+            NetSizeComboBox.Visibility = Visibility.Visible;
+            FieldSizeLabel.Visibility = Visibility.Visible;
             NetworkSetupLabel.Content = "Create network game";
             IpAddressTextBox.Text = NetworkManager.Instance.GetHostAddress();
             PortTextBox.Text = 11000.ToString();
@@ -105,6 +115,8 @@ namespace Cross_Zero
             CreateServerButton.Visibility = Visibility.Hidden;
             CreateMulGameCanvas.Visibility = Visibility.Visible;
             ConnectToServerButton.Visibility = Visibility.Visible;
+            NetSizeComboBox.Visibility = Visibility.Hidden;
+            FieldSizeLabel.Visibility = Visibility.Hidden;
             NetworkSetupLabel.Content = "Connect to server";
             IpAddressTextBox.Text = NetworkManager.Instance.GetHostAddress();
             PortTextBox.Text = 11000.ToString();
@@ -114,6 +126,11 @@ namespace Cross_Zero
         {
             NetworkManager.Instance.IsServer = true;
             NetworkManager.Instance.IsMultiplayerGame = true;
+            ComboBoxItem cbi = (ComboBoxItem)NetSizeComboBox.ItemContainerGenerator.ContainerFromIndex(NetSizeComboBox.SelectedIndex);
+            if (cbi == null) return;
+
+            savedFieldSize = int.Parse((string) cbi.Content);
+
             CreateMulGameCanvas.Visibility = Visibility.Hidden;
             UIController.Instance.StartListenNetworkEvents();
             ConnectedListCanvas.Visibility = Visibility.Visible;
@@ -144,8 +161,8 @@ namespace Cross_Zero
             //ComboBoxItem cbi = (ComboBoxItem)sizeComboBox.ItemContainerGenerator.ContainerFromIndex(sizeComboBox.SelectedIndex);
             //if (cbi == null) return;
             //GameController.Instance.StartGame(int.Parse((string)cbi.Content));
-            MultiplayerGameController.Instance.StartGame(9);
-            NetworkManager.Instance.StartGame(9);
+            MultiplayerGameController.Instance.StartGame(savedFieldSize);
+            NetworkManager.Instance.StartGame(savedFieldSize);
         }
 
         private void OnEndCreateNetGame()
