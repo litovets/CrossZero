@@ -39,7 +39,7 @@
         </StackPanel>
     </Window.Resources>
     <Canvas Height="512" Width="512">
-        <Canvas x:Name="menuCanvas" Height="512" Width="512" Visibility="Hidden">
+        <Canvas x:Name="menuCanvas" Height="512" Width="512" Visibility="Visible">
             <Button Name="StartMulGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="170" FontSize="20" FontWeight="Bold" Click="StartMulGameButton_Click">MULTIPLAYER</Button>
             <Button Name="SingleGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="230" FontSize="20" FontWeight="Bold" Click="SingleGameButton_Click">SINGLE</Button>
             <Button Name="ExitButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="290" FontSize="20" FontWeight="Bold" Click="ExitButton_Click">EXIT</Button>
@@ -79,15 +79,15 @@
                 <ComboBoxItem Content="19" Foreground="White" Background="#FF383838"/>
                 <ComboBoxItem Content="21" Foreground="#8EFFFFFF" Background="#FF383838"/>
             </ComboBox>
-            <Label Name="FieldSizeLabel" Content="Размер игрового поля" Canvas.Left="190" Canvas.Top="197" Visibility="Hidden"/>
+            <Label Name="FieldSizeLabel" Content="Game field size" Canvas.Left="214" Canvas.Top="197" Visibility="Hidden"/>
         </Canvas>
 
         <Canvas x:Name="ConnectedListCanvas" Height="512" Width="512" Visibility="Hidden">
             <ListBox Name="ConnectedListBox" Height="100" Canvas.Left="120" Canvas.Top="79" Width="275"/>
-            <Button x:Name="StartNetGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="START" Visibility="Hidden" Click="StartNetGameButton_Click"/>
+            <Button Name="StartNetGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="START" Visibility="Hidden" Click="StartNetGameButton_Click"/>
         </Canvas>
 
-        <Canvas Name="optionsCanvas" Height="512" Width="512" Visibility="Visible">
+        <Canvas Name="optionsCanvas" Height="512" Width="512" Visibility="Hidden">
             <Grid Width="512">
                 <Label Content="Create game for two players" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
             </Grid>
@@ -103,7 +103,7 @@
                 <ComboBoxItem Content="19" Foreground="White" Background="#FF383838"/>
                 <ComboBoxItem Content="21" Foreground="#8EFFFFFF" Background="#FF383838"/>
             </ComboBox>
-            <Label Content="Размер игрового поля" Canvas.Left="190" Canvas.Top="272"/>
+            <Label Content="Game field size" Canvas.Left="211" Canvas.Top="272"/>
             <Button Name="BackButtonOptGame" Width="100" Height="50" Canvas.Left="10" Canvas.Top="452" FontSize="20" FontWeight="Bold" Click="BackButtonOptGame_Click">BACK</Button>
         </Canvas>
 

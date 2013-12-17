@@ -53,7 +53,7 @@ namespace Cross_Zero.Logic
 
             ActivePlayerId = 0;
 
-            UIController.Instance.ActivePlayerLabel.Content = "Ход " + Players[ActivePlayerId].Name;
+            UIController.Instance.ActivePlayerLabel.Content = Players[ActivePlayerId].Name + " turn";
 
             OnEndCreateGame();
             IsGameStarted = true;

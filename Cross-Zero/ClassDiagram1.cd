@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Cross_Zero.MainWindow" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AjgAAAghQEBAAAAAAAAAAAARAAAAAABAoAACBAAAAIA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.UIController" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MgEEAAIJAAJgCAAAAAoABAAAASEAjIqEQEAAAMAHAgA=</HashCode>
+      <FileName>UIController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Logic.FieldGenerator" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAQMAAAAAAAAAAAAAQAAASAAAAAA=</HashCode>
+      <FileName>Logic\FieldGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Logic.GameController" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IGAEAABEAAIBAAIQAABCIAAgCAAgBAAAQAAAgRAAAEA=</HashCode>
+      <FileName>Logic\GameController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Logic.LineEventArgs" Collapsed="true">
+    <Position X="4" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAIAAAIAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Logic\LogicLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Logic.LogicLine" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAIAAAAQAAACUAAAAABAAAAACAAgAgQIAAAAAACgA=</HashCode>
+      <FileName>Logic\LogicLine.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Logic.LogicRectangle" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQEAAAAAAAAAAAAAAAAAAAAAAACAAgQAAAAAAABQAgA=</HashCode>
+      <FileName>Logic\LogicRectangle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Logic.MultiplayerGameController" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAEAAEAAAAAAAAAAIAAAAAgAAAAAgAAQAAAAAAAAgA=</HashCode>
+      <FileName>Logic\MultiplayerGameController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Logic.Player" Collapsed="true">
+    <Position X="2.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAABAAAAAAAAQAQIAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Logic\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Network.AsyncSocketClient" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACCUEAAgAEAAAAAFAAAAAAAAEIAAgQAAAAQASgAAI=</HashCode>
+      <FileName>Network\AsyncSocketClient.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Cross_Zero.Network.StateObject" Collapsed="true">
+    <Position X="3" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAACAAEAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Network\AsyncSocketServer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cross_Zero.Network.AsyncSocketServer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACCQAAAiAMAAAAAFAAAAAAAAEIAAgAAAAABASAAIY=</HashCode>
+      <FileName>Network\AsyncSocketServer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Cross_Zero.Network.NetworkManager" Collapsed="true">
+    <Position X="4.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>SAAGAAAEgAAAAAAgAQAAIAAgAACAAAAAQBAAQCAAAAI=</HashCode>
+      <FileName>Network\NetworkManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Cross_Zero.Network.INetworkGame" Collapsed="true">
+    <Position X="3" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAEAAAAAAAAAAAAAAEIAAAAAAAAAASAAAI=</HashCode>
+      <FileName>Network\INetworkGame.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Cross_Zero.Network.NetworkCode" Collapsed="true">
+    <Position X="4.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAABAAAAgAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Network\NetworkCodes.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Delegate Name="NetworkEvent" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UIController.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

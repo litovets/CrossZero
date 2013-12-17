@@ -102,7 +102,7 @@ namespace Cross_Zero
 
         private void SetNextPlayerName()
         {
-            ActivePlayerLabel.Content = "Ход " + GameController.Instance.Players[GameController.Instance.ActivePlayerId].Name;
+            ActivePlayerLabel.Content = GameController.Instance.Players[GameController.Instance.ActivePlayerId].Name + " turn";
         }
         
         private static UIController _instance;
