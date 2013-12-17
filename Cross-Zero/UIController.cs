@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using CrossZeroCommon;
@@ -203,13 +204,37 @@ namespace Cross_Zero
 
         public void EnableLine(Line line)
         {
+            
+
             if (GameController.Instance.ActivePlayerId == 0)
                 line.Stroke = P1LineEnabledColor;
             else
                 line.Stroke = P2LineEnabledColor;
 
+            ShowEnableLineAnimation(line);
+
             line.MouseEnter -= LineOnMouseEnter;
             line.MouseLeave -= LineOnMouseLeave;
+        }
+
+        private void ShowEnableLineAnimation(Line line)
+        {
+            double normalStrokeThickness = line.StrokeThickness;
+            DoubleAnimation anim = new DoubleAnimation();
+            anim.Duration = new Duration(TimeSpan.FromSeconds(0.2));
+            //anim.RepeatBehavior = new RepeatBehavior(2);
+            anim.AutoReverse = true;
+            anim.From = normalStrokeThickness;
+            anim.To = normalStrokeThickness + 2.0;
+            line.BeginAnimation(Line.StrokeThicknessProperty, anim);
+            ColorAnimation c_anim = new ColorAnimation();
+            c_anim.Duration = new Duration(TimeSpan.FromSeconds(0.2));
+            //c_anim.RepeatBehavior = new RepeatBehavior(2);
+            c_anim.AutoReverse = true;
+            c_anim.To = Colors.Transparent;
+            SolidColorBrush brush = new SolidColorBrush(((SolidColorBrush)line.Stroke).Color);
+            line.Stroke = brush;
+            brush.BeginAnimation(SolidColorBrush.ColorProperty, c_anim);
         }
 
         public void NetRequestEnableLine(LogicLine line)
