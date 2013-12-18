@@ -182,7 +182,7 @@ namespace Cross_Zero.Network
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //MessageBox.Show(ex.Message);
                 MessageBox.Show("FAIL SEND CALLBACK");
@@ -252,12 +252,12 @@ namespace Cross_Zero.Network
             Send(client, buffer);
         }
 
-        public event Action<string, string, string> ServerCreateComplete;
-        public event Action<string, string, string> ConnectToServerComplete;
-        public event Action ClientDisconnect;
+        public Action<string, string, string> ServerCreateComplete { get; set; }
+        public Action<string, string, string> ConnectToServerComplete { get; set; }
+        public Action ClientDisconnect { get; set; }
 
-        public event Action<int> OnStartGame;
-        public event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;
+        public Action<int> OnStartGame { get; set; }
+        public Action<Vector2, LogicLine.Positioning, int> OnLineEnable { get; set; }
 
         #endregion
     }

@@ -32,7 +32,7 @@ namespace Cross_Zero.Logic
         private readonly Line _uiLine;
         private Vector2 _pos;
 
-        public event EventHandler<LineEventArgs> LineEnabled;
+        public Action<Vector2, Positioning> LineEnabled;
 
         private Positioning _positioning;
 
@@ -43,6 +43,11 @@ namespace Cross_Zero.Logic
             {
                 _uiLine.MouseLeftButtonUp += UiLineOnMouseLeftButtonUp;
             }
+        }
+
+        ~LogicLine()
+        {
+            _uiLine.MouseLeftButtonUp -= UiLineOnMouseLeftButtonUp;
         }
 
         private void UiLineOnMouseLeftButtonUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
@@ -58,7 +63,7 @@ namespace Cross_Zero.Logic
             EnableLine(true);
 
             if (LineEnabled != null)
-                LineEnabled(this, lineEventArgs);
+                LineEnabled(_pos, _positioning);
         }
 
         public void EnableLine(bool flag)
@@ -95,11 +100,6 @@ namespace Cross_Zero.Logic
             UIController.Instance.SetupHLine(_uiLine, pos);
 
             GameController.Instance.LogicLines.Add(this);
-        }
-
-        ~LogicLine()
-        {
-            _uiLine.MouseLeftButtonUp -= UiLineOnMouseLeftButtonUp;
         }
     }
 }

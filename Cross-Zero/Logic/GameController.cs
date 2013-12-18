@@ -1,7 +1,7 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using CrossZeroCommon;
 using Cross_Zero.Network;
 
 namespace Cross_Zero.Logic
@@ -20,8 +20,8 @@ namespace Cross_Zero.Logic
         public List<LogicLine> LogicLines { get; set; }
         public int RectsCount { get; protected set; }
 
-        public event Action NextPlayerEvent;
-        public event Action EndCreateGame;
+        public Action NextPlayerEvent;
+        public Action EndCreateGame;
 
         public bool IsGameStarted { get; protected set; }
 
@@ -61,7 +61,7 @@ namespace Cross_Zero.Logic
 
             foreach (LogicLine logicLine in LogicLines)
             {
-                logicLine.LineEnabled += LogicLineOnEnabled;
+                logicLine.LineEnabled = LogicLineOnEnabled;
             }
 
             for (int i = 0; i < _gameField.Length; i++)
@@ -69,7 +69,7 @@ namespace Cross_Zero.Logic
                 RectsCount += _gameField[i].Length;
                 for (int j = 0; j < _gameField[i].Length; j++)
                 {
-                    _gameField[i][j].RectCompleted += OnRectCompleted;
+                    _gameField[i][j].RectCompleted = OnRectCompleted;
                 }
             }
 
@@ -111,7 +111,7 @@ namespace Cross_Zero.Logic
             TurnAgain = true;
         }
 
-        private void LogicLineOnEnabled(object sender, LineEventArgs e)
+        private void LogicLineOnEnabled(Vector2 pos, LogicLine.Positioning positioning)
         {
             NextPlayer();
             OnNextPlayer();

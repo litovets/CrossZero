@@ -298,12 +298,12 @@ namespace Cross_Zero.Network
             Send(server, buffer);
         }
 
-        public event Action<string, string, string> ServerCreateComplete;
-        public event Action<string, string, string> ConnectToServerComplete;
-        public event Action ClientDisconnect;
+        public Action<string, string, string> ServerCreateComplete { get; set; }
+        public Action<string, string, string> ConnectToServerComplete { get; set; }
+        public Action ClientDisconnect { get; set; }
 
-        public event Action<int> OnStartGame;
-        public event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;
+        public Action<int> OnStartGame { get; set; }
+        public Action<Vector2, LogicLine.Positioning, int> OnLineEnable { get; set; }
 
         #endregion
     }

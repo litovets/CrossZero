@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using CrossZeroCommon;
 using Cross_Zero.Logic;
 
@@ -34,10 +29,10 @@ namespace Cross_Zero.Network
         public bool IsServer { get; set; }
         public INetworkGame NetworkGame { get; private set; }
 
-        public event Action<string, string, string> ServerIsCreated;
-        public event Action<string, string, string> ClientIsConnected;
-        public event Action ClientDisconnected;
-        public event Action<int> StartGameEvent;
+        public Action<string, string, string> ServerIsCreated;
+        public Action<string, string, string> ClientIsConnected;
+        public Action ClientDisconnected;
+        public Action<int> StartGameEvent;
 
 
         public string GetHostAddress()
@@ -54,10 +49,10 @@ namespace Cross_Zero.Network
         public void StartServer(string ipAddress, string port)
         {
             NetworkGame = new AsyncSocketServer(ipAddress,port);
-            NetworkGame.OnLineEnable += OnLineEnable;
-            NetworkGame.ServerCreateComplete += OnServerCreateComplete;
-            NetworkGame.ConnectToServerComplete += OnConnectToServerComplete;
-            NetworkGame.ClientDisconnect += OnClientDisconnect;
+            NetworkGame.OnLineEnable = OnLineEnable;
+            NetworkGame.ServerCreateComplete = OnServerCreateComplete;
+            NetworkGame.ConnectToServerComplete = OnConnectToServerComplete;
+            NetworkGame.ClientDisconnect = OnClientDisconnect;
             NetworkGame.StartNetwork();
         }
 
@@ -101,10 +96,11 @@ namespace Cross_Zero.Network
         public void StartClient(string ipAddress, string port)
         {
             NetworkGame = new AsyncSocketClient(ipAddress, port);
-            NetworkGame.OnStartGame += OnStartGame;
-            NetworkGame.OnLineEnable += OnLineEnable;
-            NetworkGame.ServerCreateComplete += OnServerCreateComplete;
-            NetworkGame.ConnectToServerComplete += OnConnectToServerComplete;
+            NetworkGame.OnStartGame = OnStartGame;
+            NetworkGame.OnLineEnable = OnLineEnable;
+            NetworkGame.ServerCreateComplete = OnServerCreateComplete;
+            NetworkGame.ConnectToServerComplete = OnConnectToServerComplete;
+            NetworkGame.ClientDisconnect = OnClientDisconnect;
             NetworkGame.StartNetwork();
         }
 

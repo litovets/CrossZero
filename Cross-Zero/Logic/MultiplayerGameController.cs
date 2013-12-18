@@ -26,7 +26,7 @@ namespace Cross_Zero.Logic
 
         protected MultiplayerGameController()
         {
-            UIController.Instance.UiOperationComplete += OnSetNextPlayer;
+            UIController.Instance.UiOperationComplete = OnSetNextPlayer;
         }
 
         private static MultiplayerGameController _instance;
@@ -39,7 +39,7 @@ namespace Cross_Zero.Logic
 
             foreach (LogicLine logicLine in LogicLines)
             {
-                logicLine.LineEnabled += LogicLineOnEnabled;
+                logicLine.LineEnabled = LogicLineOnEnabled;
             }
 
             for (int i = 0; i < _gameField.Length; i++)
@@ -47,7 +47,7 @@ namespace Cross_Zero.Logic
                 RectsCount += _gameField[i].Length;
                 for (int j = 0; j < _gameField[i].Length; j++)
                 {
-                    _gameField[i][j].RectCompleted += OnRectCompleted;
+                    _gameField[i][j].RectCompleted = OnRectCompleted;
                 }
             }
 
@@ -67,12 +67,12 @@ namespace Cross_Zero.Logic
             if (setCurrent) CurrentPlayer = Players[id];
         }
 
-        private void LogicLineOnEnabled(object sender, LineEventArgs args)
+        private void LogicLineOnEnabled(Vector2 pos, LogicLine.Positioning positioning)
         {
             NextPlayer();
             OnNextPlayer();
             int nextTurnValue = TurnAgain ? 0 : 1;
-            NetworkManager.Instance.NetworkGame.SendEnableLine(args.pos, args.positioning, nextTurnValue);
+            NetworkManager.Instance.NetworkGame.SendEnableLine(pos, positioning, nextTurnValue);
             TurnAgain = false;
         }
 

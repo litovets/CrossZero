@@ -26,7 +26,7 @@ namespace Cross_Zero
         public SolidColorBrush P1LineEnabledColor = Brushes.Black;
         public SolidColorBrush P2LineEnabledColor = Brushes.Red;
 
-        public event Action UiOperationComplete;
+        public Action UiOperationComplete;
 
         private object savedData;
 
@@ -49,10 +49,10 @@ namespace Cross_Zero
 
         public void StartListenNetworkEvents()
         {
-            NetworkManager.Instance.ServerIsCreated += OnServerIsCreated;
-            NetworkManager.Instance.ClientIsConnected += OnServerIsCreated;
-            NetworkManager.Instance.StartGameEvent += OnStartGameEvent;
-            NetworkManager.Instance.ClientDisconnected += OnClientDisconnected;
+            NetworkManager.Instance.ServerIsCreated = OnServerIsCreated;
+            NetworkManager.Instance.ClientIsConnected = OnServerIsCreated;
+            NetworkManager.Instance.StartGameEvent = OnStartGameEvent;
+            NetworkManager.Instance.ClientDisconnected = OnClientDisconnected;
             StartListenNextTurnEvent();
         }
 
@@ -70,7 +70,7 @@ namespace Cross_Zero
 
         public void StartListenNextTurnEvent()
         {
-            GameController.Instance.NextPlayerEvent += OnNextPlayerEventLocal;
+            GameController.Instance.NextPlayerEvent = OnNextPlayerEventLocal;
         }
 
         private void OnStartGameEvent(int fieldSize)

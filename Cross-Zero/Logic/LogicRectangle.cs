@@ -8,7 +8,7 @@ namespace Cross_Zero.Logic
 
         public Vector2 Pos { get; set; }
 
-        public event Action<LogicRectangle> RectCompleted;
+        public Action<LogicRectangle> RectCompleted;
 
         public class LineState
         {

@@ -46,7 +46,7 @@ namespace Cross_Zero
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            GameController.Instance.EndCreateGame += OnEndCreateGame;
+            GameController.Instance.EndCreateGame = OnEndCreateGame;
 
             ComboBoxItem cbi = (ComboBoxItem) sizeComboBox.ItemContainerGenerator.ContainerFromIndex(sizeComboBox.SelectedIndex);
             if (cbi == null) return;
@@ -156,7 +156,7 @@ namespace Cross_Zero
 
         private void StartNetGameButton_Click(object sender, RoutedEventArgs e)
         {
-            MultiplayerGameController.Instance.EndCreateGame += OnEndCreateNetGame;
+            MultiplayerGameController.Instance.EndCreateGame = OnEndCreateNetGame;
 
             //ComboBoxItem cbi = (ComboBoxItem)sizeComboBox.ItemContainerGenerator.ContainerFromIndex(sizeComboBox.SelectedIndex);
             //if (cbi == null) return;

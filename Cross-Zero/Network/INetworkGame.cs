@@ -18,11 +18,11 @@ namespace Cross_Zero.Network
 
         void SendEnableLine(Vector2 pos, LogicLine.Positioning positioning, int nextTurn);
 
-        event Action<string, string, string> ServerCreateComplete;
-        event Action<string, string, string> ConnectToServerComplete;
-        event Action ClientDisconnect;
+        Action<string, string, string> ServerCreateComplete { get; set; }
+        Action<string, string, string> ConnectToServerComplete { get; set; }
+        Action ClientDisconnect { get; set; }
 
-        event Action<int> OnStartGame;
-        event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;
+        Action<int> OnStartGame { get; set; }
+        Action<Vector2, LogicLine.Positioning, int> OnLineEnable { get; set; }
     }
 }
