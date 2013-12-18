@@ -36,6 +36,7 @@ namespace Cross_Zero.Network
 
         public event Action<string, string, string> ServerIsCreated;
         public event Action<string, string, string> ClientIsConnected;
+        public event Action ClientDisconnected;
         public event Action<int> StartGameEvent;
 
 
@@ -56,7 +57,16 @@ namespace Cross_Zero.Network
             NetworkGame.OnLineEnable += OnLineEnable;
             NetworkGame.ServerCreateComplete += OnServerCreateComplete;
             NetworkGame.ConnectToServerComplete += OnConnectToServerComplete;
+            NetworkGame.ClientDisconnect += OnClientDisconnect;
             NetworkGame.StartNetwork();
+        }
+
+        private void OnClientDisconnect()
+        {
+            if (ClientDisconnected != null)
+            {
+                ClientDisconnected();
+            }
         }
 
         private void OnConnectToServerComplete(string name, string ipAddress, string port)

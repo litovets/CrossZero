@@ -31,6 +31,7 @@ namespace Cross_Zero.Network
         private int port;
 
         private Socket client;
+        private Socket handler;
 
         public AsyncSocketServer(string ipAddress, string port)
         {
@@ -80,7 +81,8 @@ namespace Cross_Zero.Network
                     //allDone.Reset();
 
                     // Start an asynchronous socket to listen for connections.
-                    listener.BeginAccept(AcceptCallback, listener);
+                handler = listener;
+                listener.BeginAccept(AcceptCallback, listener);
 
                     // Wait until a connection is made before continuing.
                     //allDone.WaitOne();
@@ -144,6 +146,11 @@ namespace Cross_Zero.Network
             }
             catch (Exception ex)
             {
+                if (ClientDisconnect != null)
+                {
+                    ClientDisconnect();
+                }
+                handler.BeginAccept(AcceptCallback, handler);
                 MessageBox.Show("In ReadCallback\n" + ex.Message);
             }
         }
@@ -247,6 +254,7 @@ namespace Cross_Zero.Network
 
         public event Action<string, string, string> ServerCreateComplete;
         public event Action<string, string, string> ConnectToServerComplete;
+        public event Action ClientDisconnect;
 
         public event Action<int> OnStartGame;
         public event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;

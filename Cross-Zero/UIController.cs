@@ -52,7 +52,20 @@ namespace Cross_Zero
             NetworkManager.Instance.ServerIsCreated += OnServerIsCreated;
             NetworkManager.Instance.ClientIsConnected += OnServerIsCreated;
             NetworkManager.Instance.StartGameEvent += OnStartGameEvent;
+            NetworkManager.Instance.ClientDisconnected += OnClientDisconnected;
             StartListenNextTurnEvent();
+        }
+
+        private void OnClientDisconnected()
+        {
+            ConnectedListBox.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new NetworkEvent(DeleteItemFromListBox));
+        }
+
+        private void DeleteItemFromListBox()
+        {
+            ConnectedListBox.Items.RemoveAt(ConnectedListBox.Items.Count - 1);
+            if (StartGameButton.Visibility == Visibility.Visible)
+                StartGameButton.Visibility = Visibility.Hidden;
         }
 
         public void StartListenNextTurnEvent()

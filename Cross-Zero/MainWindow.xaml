@@ -83,6 +83,9 @@
         </Canvas>
 
         <Canvas x:Name="ConnectedListCanvas" Height="512" Width="512" Visibility="Hidden">
+            <Grid Width="512">
+                <Label Content="Connected list" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
+            </Grid>
             <ListBox Name="ConnectedListBox" Height="100" Canvas.Left="120" Canvas.Top="79" Width="275"/>
             <Button Name="StartNetGameButton" Width="150" Height="50" Canvas.Left="181" Canvas.Top="260" FontSize="20" FontWeight="Bold" Content="START" Visibility="Hidden" Click="StartNetGameButton_Click"/>
         </Canvas>

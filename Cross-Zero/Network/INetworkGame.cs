@@ -20,6 +20,7 @@ namespace Cross_Zero.Network
 
         event Action<string, string, string> ServerCreateComplete;
         event Action<string, string, string> ConnectToServerComplete;
+        event Action ClientDisconnect;
 
         event Action<int> OnStartGame;
         event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;

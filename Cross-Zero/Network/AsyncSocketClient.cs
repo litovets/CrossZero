@@ -174,6 +174,10 @@ namespace Cross_Zero.Network
             }
             catch (Exception e)
             {
+                if (ClientDisconnect != null)
+                {
+                    ClientDisconnect();
+                }
                 MessageBox.Show(e.Message);
             }
         }
@@ -296,6 +300,7 @@ namespace Cross_Zero.Network
 
         public event Action<string, string, string> ServerCreateComplete;
         public event Action<string, string, string> ConnectToServerComplete;
+        public event Action ClientDisconnect;
 
         public event Action<int> OnStartGame;
         public event Action<Vector2, LogicLine.Positioning, int> OnLineEnable;
